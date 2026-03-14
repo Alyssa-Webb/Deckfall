@@ -1,4 +1,4 @@
-package org.example.Character;
+package deckfall.Character;
 
 abstract public class Character {
 

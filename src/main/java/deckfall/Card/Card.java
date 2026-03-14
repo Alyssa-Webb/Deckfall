@@ -1,4 +1,4 @@
-package org.example.Card;
+package deckfall.Card;
 
 abstract public class Card {
 }

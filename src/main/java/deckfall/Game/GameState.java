@@ -1,4 +1,4 @@
-package org.example.Game;
+package deckfall.Game;
 
 public class GameState {
 }
