@@ -3,8 +3,9 @@ package deckfall.Card;
 public abstract class AttackCard extends Card {
     protected int damageDealt;
 
-    public AttackCard(String name, int energyCost, int damageDealt) {
-        super(name, energyCost);
+    //Card(String cardName, int energyCost, String description, CardType type)
+    public AttackCard(String name, int energyCost, String description, int damageDealt) {
+        super(name, energyCost, description, CardType.SLASH);
         this.damageDealt = damageDealt;
     }
 }
