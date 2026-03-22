@@ -5,6 +5,10 @@ public interface GameEventObserver {
     void onFloorEntry(int floor);
     void onFloorClear(int floor);
 
+    //Battle Events
+    void onBattleEntry();
+    void onBattleWin();
+
     // Death Events
     void onSlayerDefeat();
     void onEnemyDefeat(String enemyName);
@@ -12,6 +16,8 @@ public interface GameEventObserver {
     // Combat Events
     void onEntityAttack(String attackerName, String targetName, int damageDealt);
     void onEntityDefense(String entityName, int damageBlocked);
+    void onEntityHeal(String entityName, int damageHealed);
+    void onEntityPass(String entityName);
 
     // Demon King Events
     void onDemonKingFloor();
