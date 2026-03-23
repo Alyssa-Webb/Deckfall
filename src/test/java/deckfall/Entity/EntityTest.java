@@ -44,4 +44,17 @@ public class EntityTest {
     void testMaxHPSetCorrectly() {
         assertEquals(slayer.getHP(), slayer.getMaxHP());
     }
+
+    @Test
+    void testEntityBlockAbsorption() {
+        DemonKing boss = new DemonKing();
+        boss.gainBlock(10);
+
+        // If boss takes 15 damage, 10 should be blocked, 5 should hit HP
+        int initialHP = boss.getHP();
+        boss.takeDamage(15);
+
+        assertEquals(initialHP - 5, boss.getHP(), "HP should only drop by 5 after block");
+        assertEquals(0, boss.getBlock(), "Block should be fully consumed");
+    }
 }

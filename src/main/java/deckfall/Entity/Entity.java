@@ -10,6 +10,7 @@ public abstract class Entity {
     protected String name;
     protected int healthPoints;
     protected int maxHealthPoints;
+    protected int block;
 
     protected List<Card> deck = new ArrayList<>();
     protected List<Card> hand = new ArrayList<>();
@@ -23,7 +24,14 @@ public abstract class Entity {
 
     // Entity Methods
     public void takeDamage(int damageTaken) {
-        this.healthPoints = Math.max(0, this.healthPoints - damageTaken);
+        int damageThatHitsHP = Math.max(0, damageTaken - this.block);
+        this.block = Math.max(0, this.block - damageTaken);
+        this.healthPoints = Math.max(0, this.healthPoints - damageThatHitsHP);
+    }
+
+    // Combat Methods
+    public void gainBlock(int blockAmount) {
+        this.block += blockAmount;
     }
 
     public boolean isAlive() {
@@ -56,4 +64,5 @@ public abstract class Entity {
     public int getHP()      { return healthPoints; }
     public int getMaxHP()   { return maxHealthPoints; }
     public List<Card> getHand()   { return hand; }
+    public int getBlock()     { return block; }
 }
