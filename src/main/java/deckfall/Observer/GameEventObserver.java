@@ -1,13 +1,20 @@
 package deckfall.Observer;
 
+import deckfall.Entity.IntentType;
+
 public interface GameEventObserver {
     // Floor Events
     void onFloorEntry(int floor);
     void onFloorClear(int floor);
 
-    //Battle Events
+    // Battle Events
     void onBattleEntry();
     void onBattleWin();
+
+    // Turn Events
+    void onTurnStart(String entityName);
+    void onTurnEnd(String entityName);
+    void onTurnPass(String entityName);
 
     // Death Events
     void onSlayerDefeat();
@@ -17,7 +24,9 @@ public interface GameEventObserver {
     void onEntityAttack(String attackerName, String targetName, int damageDealt);
     void onEntityDefense(String entityName, int damageBlocked);
     void onEntityHeal(String entityName, int damageHealed);
-    void onEntityPass(String entityName);
+
+    // Enemy Intent
+    void onDecideIntent(String enemyName, IntentType intent);
 
     // Demon King Events
     void onDemonKingFloor();
