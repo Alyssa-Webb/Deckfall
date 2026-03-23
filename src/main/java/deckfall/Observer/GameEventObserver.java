@@ -1,6 +1,7 @@
 package deckfall.Observer;
 
 import deckfall.Entity.IntentType;
+import deckfall.Card.*;
 
 public interface GameEventObserver {
     // Floor Events
@@ -24,6 +25,11 @@ public interface GameEventObserver {
     void onEntityAttack(String attackerName, String targetName, int damageDealt);
     void onEntityDefense(String entityName, int damageBlocked);
     void onEntityHeal(String entityName, int damageHealed);
+
+    // Card Events
+    void onCardDrawn(Card card);
+    void onCardPlayed(Card card);
+    void onDeckShuffled();
 
     // Enemy Intent
     void onDecideIntent(String enemyName, IntentType intent);
