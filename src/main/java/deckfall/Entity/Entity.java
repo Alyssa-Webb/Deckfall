@@ -56,4 +56,10 @@ public abstract class Entity {
     public int getHP()      { return healthPoints; }
     public int getMaxHP()   { return maxHealthPoints; }
     public List<Card> getHand()   { return hand; }
+
+    public String evalMove(Card selectedCard, Entity target) {
+        //TODO: eval whether the card is in the entity's hand, whether they have enough energy/mana? to use it,
+        // and whether the selected target is valid for the type of card selected. If any are false, return a string explaining that
+        return "";
+    }
 }

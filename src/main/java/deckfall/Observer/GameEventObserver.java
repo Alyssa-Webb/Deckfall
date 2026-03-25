@@ -1,5 +1,9 @@
 package deckfall.Observer;
 
+import deckfall.Entity.Entity;
+
+import java.util.List;
+
 public interface GameEventObserver {
     // Floor Events
     void onFloorEntry(int floor);
@@ -7,7 +11,9 @@ public interface GameEventObserver {
 
     //Battle Events
     void onBattleEntry();
+    void onBattleChange(List<Entity> currentLivingPlayers, List<Entity> currentLivingFoes);
     void onBattleWin();
+    void onInvalidMoveSelected(String message);
 
     // Death Events
     void onSlayerDefeat();
@@ -18,6 +24,7 @@ public interface GameEventObserver {
     void onEntityDefense(String entityName, int damageBlocked);
     void onEntityHeal(String entityName, int damageHealed);
     void onEntityPass(String entityName);
+    void onEntityDamaged(String entityName, int damageReceived);
 
     // Demon King Events
     void onDemonKingFloor();
