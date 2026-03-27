@@ -62,4 +62,7 @@ public abstract class Entity {
         // and whether the selected target is valid for the type of card selected. If any are false, return a string explaining that
         return "";
     }
+
+    public void pass() {
+    }
 }

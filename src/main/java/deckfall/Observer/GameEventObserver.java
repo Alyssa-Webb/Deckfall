@@ -1,10 +1,17 @@
 package deckfall.Observer;
 
+import deckfall.Controller.Listener;
 import deckfall.Entity.Entity;
 
 import java.util.List;
 
 public interface GameEventObserver {
+    //register event listeners:
+    public void addDisplayFinishedListener(Listener listener);
+    public void addUserInputListener(Listener listener);
+
+    void defaultNotif(String message);
+
     // Floor Events
     void onFloorEntry(int floor);
     void onFloorClear(int floor);
@@ -32,4 +39,8 @@ public interface GameEventObserver {
     // Win Condition Events
     void onVictory();
     void onDefeat();
+
+    void requestUserInput(String gameData);
+
+    void startGame();
 }

@@ -6,6 +6,8 @@ public enum GameState {
 
     GAME_START,
     GAME_OVER,
+    GAME_WIN,
+    GAME_LOSS,
 
     LEVEL_START,
     LEVEL_END,

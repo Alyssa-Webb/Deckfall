@@ -1,44 +1,41 @@
 package deckfall.Controller;
 
-import deckfall.DataClasses.Action;
 import deckfall.DataClasses.EntityAction;
+import deckfall.DataClasses.SideEffect;
 import deckfall.Game.Game;
 import deckfall.Game.GameState;
 import deckfall.Game.MoveTypes;
-import deckfall.Observer.GameEventManager;
 import deckfall.Observer.GameEventObserver;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class GameController {
     private Game game;
     private GameState gameState = GameState.GAME_START;
     // I'm concerned about a race condition when it comes to having multiple 'Observers' since they're also gonna need to manage input (ugh)
-    private GameEventManager manager;
+    private GameEventObserver view;
 
-    public GameController(Game game, GameEventManager manager) {
+    public GameController(Game game, GameEventObserver view) {
         this.game = game;
-        this.manager = manager;
+        this.view = view;
+        view.addDisplayFinishedListener(new InformationDisplayFinishedListener());
+        view.addUserInputListener(new UserInputReceivedListener());
     }
 
     public void gameStart() {
-        manager.visualizeGame();
+        view.startGame();
     }
 
     private void next() {
         //do different things depending on the current state
         switch (gameState){
             case NOTIFYING_OF_SIDE_EFFECTS:
-                Action action = k;
-                if (action == null) {
-
-                }
+                SideEffect sideEffect = game.getSideEffect();
+                evalSideEffect(sideEffect);
                 break;
             case ENEMY_TURN:
-
                 break;
             case PLAYER_TURN:
+                //view.requestUserInput(game.getCurrentTurnHolder().getHand());
+                view.requestUserInput("Requesting user input");
                 break;
             case BATTLE_START:
                 break;
@@ -48,9 +45,15 @@ public class GameController {
                 break;
             case LEVEL_END:
                 break;
+            case GAME_WIN:
+                view.onVictory();
+                break;
+            case GAME_LOSS:
+                view.onDefeat();
             case GAME_OVER:
                 break;
             case GAME_START:
+                view.startGame();
                 break;
             case null, default:
                 System.err.println("I don't think this will be necessary but ¯\\_(ツ)_/¯");
@@ -58,37 +61,39 @@ public class GameController {
         }
     }
 
-    private Action parseEntityAction(){
-        return new Action() {
-            @Override
-            public void execute() {
-                System.out.println("A");
-            }
-        };
+    private void evalSideEffect(SideEffect sideEffect) {
+        switch(sideEffect.sideEffectType){
+            case ENEMY_DEATH:
+                view.onEnemyDefeat("Enemy");
+                break;
+            case null:
+                throw new RuntimeException("Something is wrong with the way game changes states");
+            default:
+                view.defaultNotif(sideEffect.gameData);
+        }
     }
 
 
-    public class InformationDisplayFinishedListener implements UserInputListener {
+    public class InformationDisplayFinishedListener implements Listener {
         @Override
-        public void UserActionPerformed(EntityAction e) {
-            gameState = game.evalNextGameState(e, GameState.GAME_START);
+        public void ActionPerformed(EntityAction e) {
+            gameState = game.nextGameState();
             next();
         }
     }
 
-    public class UserInputReceivedListener implements UserInputListener {
+    public class UserInputReceivedListener implements Listener {
         @Override
-        public void UserActionPerformed(EntityAction e) {
+        public void ActionPerformed(EntityAction e) {
             String isMoveValid = game.evalValidityOfMove(e);
             if(!isMoveValid.isEmpty()){
-                manager.onInvalidMoveSelected(isMoveValid);
-                manager.requestUserInput(game.getCurrentTurnHolder().getHand());
+                view.onInvalidMoveSelected(isMoveValid);
             }
             /*Action action = () -> {
                 System.out.println("A");
             };*/
             if(e.getAction_enum() == MoveTypes.PASS || e.getAction_enum() == MoveTypes.USE_CARD){
-                gameState = game.evalNextGameState();
+                gameState = game.nextGameState();
             }
 
             // send the ActionEvent (or wtv I Really end up goin with) to game.play(ActionEvent)
