@@ -7,11 +7,9 @@ public class Slayer extends Entity {
     private static final int DEFAULT_HEALTH = 50;
     private static final int DEFAULT_DRAW_COUNT = 5;
     private static final int DEFAULT_MAX_ENERGY = 3;
-    private static final int DEFAULT_BLOCK_AMOUNT = 0;
 
-    private int maxEnergy;
+    private final int maxEnergy;
     private int energy;
-    private int block;
 
     public Slayer() {
         this(DEFAULT_SLAYER_NAME, DEFAULT_HEALTH);
@@ -60,21 +58,7 @@ public class Slayer extends Entity {
         return true;
     }
 
-    // Combat Methods
-    public void gainBlock(int blockAmount) {
-        this.block += blockAmount;
-    }
-
-    // If Player has block, block incoming damage
-    @Override
-    public void takeDamage(int damageTaken) {
-        int absorbedDamage = Math.min(block, damageTaken);
-        this.block  -= absorbedDamage;
-        super.takeDamage(damageTaken - absorbedDamage);
-    }
-
     // Getter Methods
     public int getEnergy()    { return energy; }
     public int getMaxEnergy() { return maxEnergy; }
-    public int getBlock()     { return block; }
 }

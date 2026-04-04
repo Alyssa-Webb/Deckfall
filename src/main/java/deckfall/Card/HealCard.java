@@ -5,5 +5,6 @@ public abstract class HealCard extends Card {
 
     public HealCard(String name, int energyCost, String description, int healthHealed) {
         super(name, energyCost, description, CardType.HEAL);
+        this.healthHealed = healthHealed;
     }
 }

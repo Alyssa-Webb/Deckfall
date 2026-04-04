@@ -1,5 +1,6 @@
 package deckfall.Observer;
 
+import deckfall.Entity.IntentType;
 import deckfall.Controller.Listener;
 import deckfall.DataClasses.EntityAction;
 import deckfall.Entity.Entity;
@@ -32,7 +33,7 @@ public class ConsoleLogger implements GameEventObserver {
     // Floor Events
     public void onFloorEntry(int floor) {
 
-    }
+public class ConsoleLogger extends GameEventAdapter {
 
     public void onFloorClear(int floor) {
 
