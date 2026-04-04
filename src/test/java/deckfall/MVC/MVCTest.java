@@ -1,13 +1,15 @@
-package deckfall;
+package deckfall.MVC;
 
 import deckfall.Controller.GameController;
 import deckfall.Entity.Slayer;
 import deckfall.Game.Game;
 import deckfall.Observer.ConsoleLogger;
 import deckfall.Tower.Tower;
+import org.junit.jupiter.api.Test;
 
-public class Main {
-    public static void main(String[] args) {
+public class MVCTest {
+    @Test
+    void TestMVC(){
         ConsoleLogger view = new ConsoleLogger();
         Game game = new Game(new Slayer(), new Tower());
         GameController controller = new GameController(game, view);

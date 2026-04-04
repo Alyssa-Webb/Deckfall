@@ -7,6 +7,7 @@ public class CardFactory {
         return switch (type) {
             case SLASH -> new SlashCard();
             case SHIELD -> new ShieldCard();
+            case HEAL -> new RestoreHealthCard();
         };
     }
 }
