@@ -3,6 +3,8 @@ package deckfall.Observer;
 import deckfall.Controller.Listener;
 import deckfall.DataClasses.EntityAction;
 import deckfall.Entity.Entity;
+import deckfall.Game.MoveTypes;
+
 import java.util.Scanner;
 
 import java.util.List;
@@ -113,10 +115,11 @@ public class ConsoleLogger implements GameEventObserver {
         String move = scanner.nextLine();
         if(move.equals("pass")){
             System.out.println("You passed your turn. You gained Benefit.");
+            displayFinishedListener.ActionPerformed(new EntityAction().setAction_enum(MoveTypes.PASS));
         } else {
             System.out.println("Why");
+            displayFinishedListener.ActionPerformed(emptyEntityAction);
         }
-        displayFinishedListener.ActionPerformed(emptyEntityAction);
     }
 
     @Override

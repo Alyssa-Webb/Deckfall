@@ -26,10 +26,6 @@ public class Game {
         this.tower = tower;
     }
 
-    public void play() {
-        //aaaaaaaaaaaaa?
-    }
-
     // if it's valid, then it returns an empty string. Otherwise, it returns the reason why the move is invalid.
     public String evalValidityOfMove(EntityAction action) {
         return (action.getAction_enum() == MoveTypes.USE_CARD) ? currentTurnHolder.evalMove(action.getSelectedCard(), action.getTarget()) : "";
@@ -47,13 +43,6 @@ public class Game {
         };*/
     }
 
-    /*public Action makeActionableMove(EntityAction action){
-        return switch(action.getAction_enum()){
-            case PASS -> ""
-        }
-    }*/
-
-    //public GameState evalNextGameState(EntityAction action, GameState gameState){
     public GameState nextGameState(){
         //this will be in charge of notifying when a battle and a floor is beaten, alongside damage and death
         if(!events.isEmpty()) {
@@ -68,27 +57,8 @@ public class Game {
             }
         }
 
-        /* Actually, I don't think I should be passing any arguments. ... Except, the user can do things that don't progress the game, ugh.
-        OH WAIT
-        That can just be left to the GameController. Maybe it doesn't call evalNextGameState() if the user chose to check a card/entity
-        switch(gameState) {
-            case GAME_OVER:
-                return GameState.GAME_OVER;
-            case LEVEL_END:
-                return GameState.LEVEL_START;
-            case LEVEL_START, BATTLE_END:
-                return GameState.BATTLE_START;
-            case BATTLE_START:
-                return GameState.PLAYER_TURN;
-        }
 
-        if (currentBattle.battleOver()) {
-            return GameState.BATTLE_END;
-        }
-        if(action.getAction_enum() == MoveTypes.USE_CARD){
-            numTurns += 1;
-        }*/
-        events.add("Events will eventually be changed to be of type Side Effect. I think?");
+        events.add("Events will eventually be changed to be of type SideEffect. I think?");
         //TODO: make non-trivial
         return GameState.PLAYER_TURN;
     }
