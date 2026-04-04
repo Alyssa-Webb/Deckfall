@@ -2,15 +2,27 @@ package deckfall.Observer;
 
 import deckfall.Entity.IntentType;
 import deckfall.Card.*;
+import deckfall.Controller.Listener;
+import deckfall.Entity.Entity;
+
+import java.util.List;
 
 public interface GameEventObserver {
+    //register event listeners:
+    public void addDisplayFinishedListener(Listener listener);
+    public void addUserInputListener(Listener listener);
+
+    void defaultNotif(String message);
+
     // Floor Events
     void onFloorEntry(int floor);
     void onFloorClear(int floor);
 
     // Battle Events
     void onBattleEntry();
+    void onBattleChange(List<Entity> currentLivingPlayers, List<Entity> currentLivingFoes);
     void onBattleWin();
+    void onInvalidMoveSelected(String message);
 
     // Turn Events
     void onTurnStart(String entityName);
@@ -33,6 +45,8 @@ public interface GameEventObserver {
 
     // Enemy Intent
     void onDecideIntent(String enemyName, IntentType intent);
+    void onEntityPass(String entityName);
+    void onEntityDamaged(String entityName, int damageReceived);
 
     // Demon King Events
     void onDemonKingFloor();
@@ -40,4 +54,8 @@ public interface GameEventObserver {
     // Win Condition Events
     void onVictory();
     void onDefeat();
+
+    void requestUserInput(String gameData);
+
+    void startGame();
 }

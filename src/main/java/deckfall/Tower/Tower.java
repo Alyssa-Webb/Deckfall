@@ -6,6 +6,9 @@ import java.util.List;
 public class Tower {
     LinkedList<Level> floors;
 
+    public Tower(){
+
+    }
     public Tower(LinkedList<Level> floors) {
         this.floors = floors;
     }
