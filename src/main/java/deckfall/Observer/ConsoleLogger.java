@@ -1,5 +1,6 @@
 package deckfall.Observer;
 
+import deckfall.Card.Card;
 import deckfall.Entity.IntentType;
 import deckfall.Controller.Listener;
 import deckfall.DataClasses.EntityAction;
@@ -32,9 +33,7 @@ public class ConsoleLogger implements GameEventObserver {
 
     // Floor Events
     public void onFloorEntry(int floor) {
-
-public class ConsoleLogger extends GameEventAdapter {
-
+    }
     public void onFloorClear(int floor) {
 
     }
@@ -56,6 +55,21 @@ public class ConsoleLogger extends GameEventAdapter {
 
     @Override
     public void onInvalidMoveSelected(String message) {
+
+    }
+
+    @Override
+    public void onTurnStart(String entityName) {
+
+    }
+
+    @Override
+    public void onTurnEnd(String entityName) {
+
+    }
+
+    @Override
+    public void onTurnPass(String entityName) {
 
     }
 
@@ -81,6 +95,26 @@ public class ConsoleLogger extends GameEventAdapter {
 
     @Override
     public void onEntityHeal(String entityName, int damageHealed) {
+
+    }
+
+    @Override
+    public void onCardDrawn(Card card) {
+
+    }
+
+    @Override
+    public void onCardPlayed(Card card) {
+
+    }
+
+    @Override
+    public void onDeckShuffled() {
+
+    }
+
+    @Override
+    public void onDecideIntent(String enemyName, IntentType intent) {
 
     }
 

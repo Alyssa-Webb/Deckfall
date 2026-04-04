@@ -1,10 +1,29 @@
 package deckfall.Observer;
 
 import deckfall.Card.Card;
+import deckfall.Controller.Listener;
+import deckfall.Entity.Entity;
 import deckfall.Entity.IntentType;
+
+import java.util.List;
 
 // Middleman
 public class GameEventAdapter implements GameEventObserver {
+    @Override
+    public void addDisplayFinishedListener(Listener listener) {
+
+    }
+
+    @Override
+    public void addUserInputListener(Listener listener) {
+
+    }
+
+    @Override
+    public void defaultNotif(String message) {
+
+    }
+
     // Floor Events
     @Override
     public void onFloorEntry(int floor) {}
@@ -17,7 +36,17 @@ public class GameEventAdapter implements GameEventObserver {
     public void onBattleEntry() {}
 
     @Override
+    public void onBattleChange(List<Entity> currentLivingPlayers, List<Entity> currentLivingFoes) {
+
+    }
+
+    @Override
     public void onBattleWin() {}
+
+    @Override
+    public void onInvalidMoveSelected(String message) {
+
+    }
 
     // Turn Events
     @Override
@@ -60,6 +89,16 @@ public class GameEventAdapter implements GameEventObserver {
     @Override
     public void onDecideIntent(String enemyName, IntentType intent) {}
 
+    @Override
+    public void onEntityPass(String entityName) {
+
+    }
+
+    @Override
+    public void onEntityDamaged(String entityName, int damageReceived) {
+
+    }
+
     // Demon King Events
     @Override
     public void onDemonKingFloor() {}
@@ -70,4 +109,14 @@ public class GameEventAdapter implements GameEventObserver {
 
     @Override
     public void onDefeat() {}
+
+    @Override
+    public void requestUserInput(String gameData) {
+
+    }
+
+    @Override
+    public void startGame() {
+
+    }
 }
