@@ -24,6 +24,7 @@ public class Slayer extends Entity {
         this.maxEnergy = DEFAULT_MAX_ENERGY;
         this.energy    = maxEnergy;
         this.block     = 0;
+        addToDeck(DEFAULT_CARD_DECK);
     }
 
     // Start and End Turn Methods

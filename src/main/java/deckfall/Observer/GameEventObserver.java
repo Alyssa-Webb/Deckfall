@@ -1,5 +1,6 @@
 package deckfall.Observer;
 
+import deckfall.DataClasses.RelevantGameData;
 import deckfall.Entity.IntentType;
 import deckfall.Card.*;
 import deckfall.Controller.Listener;
@@ -55,7 +56,7 @@ public interface GameEventObserver {
     void onVictory();
     void onDefeat();
 
-    void requestUserInput(String gameData);
+    void requestUserInput(RelevantGameData gameData);
 
     void startGame();
 }

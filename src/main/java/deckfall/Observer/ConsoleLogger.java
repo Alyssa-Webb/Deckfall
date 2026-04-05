@@ -1,6 +1,7 @@
 package deckfall.Observer;
 
 import deckfall.Card.Card;
+import deckfall.DataClasses.RelevantGameData;
 import deckfall.Entity.IntentType;
 import deckfall.Controller.Listener;
 import deckfall.DataClasses.EntityAction;
@@ -143,16 +144,24 @@ public class ConsoleLogger implements GameEventObserver {
     }
 
     @Override
-    public void requestUserInput(String gameData) {
+    public void requestUserInput(RelevantGameData gameData) {
         System.out.println("Requesting user input");
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please choose your move by typing 'pass'. Please.");
+
+        System.out.println("It's your turn! You have " + gameData.getSlayer().getHP() + " HP and " + gameData.getSlayer().getEnergy() + " energy.");
+        System.out.println("You can either pass your turn, get more information about a card or enemy, or play a card");
+        System.out.println("Available cards:");
+        for(Card card : gameData.getCards()) {
+            System.out.println("(" + card.getEnergyCost() + ") " + card.getName());
+        }
+        System.out.println("Currently, you can only pass your turn. type \"pass\" to pass your turn");
         String move = scanner.nextLine();
         if(move.equals("pass")){
-            System.out.println("You passed your turn. You gained Benefit.");
+            System.out.println("You passed your turn. You gained 2 extra energy for next round.");
+            System.out.println("(I dunno if STS actually does anything like that, I feel like it's typical for games like this tho)");
             displayFinishedListener.ActionPerformed(new EntityAction().setAction_enum(MoveTypes.PASS));
         } else {
-            System.out.println("Why");
+            System.out.println("You can only pass. Type 'pass' to pass");
             displayFinishedListener.ActionPerformed(emptyEntityAction);
         }
     }
