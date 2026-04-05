@@ -2,6 +2,7 @@ package deckfall.Observer;
 
 import deckfall.Card.Card;
 import deckfall.Controller.Listener;
+import deckfall.DataClasses.RelevantGameData;
 import deckfall.Entity.Entity;
 import deckfall.Entity.IntentType;
 
@@ -111,8 +112,7 @@ public class GameEventAdapter implements GameEventObserver {
     public void onDefeat() {}
 
     @Override
-    public void requestUserInput(String gameData) {
-
+    public void requestUserInput(RelevantGameData gameData) {
     }
 
     @Override

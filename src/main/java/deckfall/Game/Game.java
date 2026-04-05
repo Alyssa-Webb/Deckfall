@@ -2,6 +2,7 @@ package deckfall.Game;
 
 import deckfall.DataClasses.*;
 import deckfall.Entity.Entity;
+import deckfall.Entity.Slayer;
 import deckfall.Tower.Battle;
 import deckfall.Tower.Level;
 import deckfall.Tower.Tower;
@@ -16,13 +17,13 @@ public class Game {
     private Battle currentBattle;
     private List<Entity> entities;
     //storing the 'player' allows me to add them to the Battle when it starts, rather than having to *build* each Battle with the player
-    private final Entity player;
+    private final Slayer slayer;
     private Entity currentTurnHolder;
     private int numTurns = 0;
     private final LinkedList<String> events = new LinkedList<>();
 
-    public Game(Entity playerCharacter, Tower tower) {
-        this.player = playerCharacter;
+    public Game(Slayer playerCharacter, Tower tower) {
+        this.slayer = playerCharacter;
         this.tower = tower;
     }
 
@@ -64,7 +65,7 @@ public class Game {
     }
 
     private boolean slayerWon() {
-        return player.isAlive();
+        return slayer.isAlive();
     }
 
     public boolean isOver() {
@@ -80,5 +81,16 @@ public class Game {
     public SideEffect getSideEffect() {
         events.pop();
         return new SideEffect(SideEffectType.ENEMY_DEATH, "Enemy");
+    }
+
+    public RelevantGameData getRelevantGameData() {
+        return new RelevantGameData(slayer.getHand(), List.of("Enemy 1", "Enemy 2"), slayer);
+    }
+
+    public void startSlayerTurn() {
+        slayer.startTurn();
+    }
+    public void endSlayerTurn() {
+        slayer.endTurn();
     }
 }

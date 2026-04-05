@@ -1,6 +1,7 @@
 package deckfall.Controller;
 
 import deckfall.DataClasses.EntityAction;
+import deckfall.DataClasses.RelevantGameData;
 import deckfall.DataClasses.SideEffect;
 import deckfall.Game.Game;
 import deckfall.Game.GameState;
@@ -35,7 +36,8 @@ public class GameController {
                 break;
             case PLAYER_TURN:
                 //view.requestUserInput(game.getCurrentTurnHolder().getHand());
-                view.requestUserInput("Requesting user input");
+                game.startSlayerTurn();
+                view.requestUserInput( game.getRelevantGameData() );
                 break;
             case BATTLE_START:
                 break;
@@ -87,6 +89,7 @@ public class GameController {
         public void ActionPerformed(EntityAction e) {
             String isMoveValid = game.evalValidityOfMove(e);
             if(!isMoveValid.isEmpty()){
+                game.endSlayerTurn();
                 view.onInvalidMoveSelected(isMoveValid);
             }
             /*Action action = () -> {

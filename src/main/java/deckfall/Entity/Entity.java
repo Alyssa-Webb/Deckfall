@@ -1,6 +1,6 @@
 package deckfall.Entity;
 
-import deckfall.Card.Card;
+import deckfall.Card.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +15,14 @@ public abstract class Entity {
     protected List<Card> deck = new ArrayList<>();
     protected List<Card> hand = new ArrayList<>();
     protected List<Card> discardPile = new ArrayList<>();
+
+    protected static final List<Card> DEFAULT_CARD_DECK = List.of(
+            new SlashCard("Simple Slash", 1, "Deal 2 points of Slash damage to one enemy", 2),
+            new SlashCard("Simple Slash", 1, "Deal 2 points of Slash damage to one enemy", 2),
+            new SlashCard("Throw Down", 0, "Your final stand.", 1),
+            new RestoreHealthCard("Moon's blessing", 3, "Receive the blessing of the moon, and receive up to 5 points of health", 5),
+            new ShieldCard("Block", 1, "Block up to 3 points of incoming damage", 3)
+    );
 
     public Entity(String name, int healthPoints) {
         this.name = name;
@@ -42,15 +50,18 @@ public abstract class Entity {
     public void addToDeck(Card card) {
         deck.add(card);
     }
+    public void addToDeck(List<Card> cards) {
+        deck.addAll(cards);
+    }
 
     public void drawHand(int drawCount) {
-        if (deck.size() < drawCount) {
+        if (deck.size() <= drawCount) {
             deck.addAll(discardPile);
             discardPile.clear();
             Collections.shuffle(deck);
         }
         for (int i = 0; i < drawCount && !deck.isEmpty(); i++) {
-            hand.add(deck.remove(0));
+            hand.add(deck.removeFirst());
         }
     }
 
