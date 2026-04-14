@@ -1,7 +1,9 @@
 package deckfall.Game;
 
 import deckfall.DataClasses.*;
+import deckfall.Entity.Enemy;
 import deckfall.Entity.Entity;
+import deckfall.Entity.Goblin;
 import deckfall.Entity.Slayer;
 import deckfall.Tower.Battle;
 import deckfall.Tower.Level;
@@ -84,7 +86,9 @@ public class Game {
     }
 
     public RelevantGameData getRelevantGameData() {
-        return new RelevantGameData(slayer.getHand(), List.of("Enemy 1", "Enemy 2"), slayer);
+        List<Entity> enemies = List.of(new Goblin(), new Goblin());
+
+        return new RelevantGameData(slayer.getHand(), enemies, slayer);
     }
 
     public void startSlayerTurn() {

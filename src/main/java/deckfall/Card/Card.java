@@ -23,8 +23,12 @@ public abstract class Card {
     public String getDescription() { return description; }
     public CardType getType() { return type; }
 
+    public String getSimpleString() {
+        return getName() + " (" + getEnergyCost() + ")";
+    }
+
     @Override
     public String toString() {
-        return getName() + ":\n" + getDescription();
+        return getName() + ":\n\t" + getDescription() + "\nMana cost: " + getEnergyCost();
     }
 }
