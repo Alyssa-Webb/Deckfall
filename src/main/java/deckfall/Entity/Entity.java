@@ -85,4 +85,9 @@ public abstract class Entity {
 
     public void pass() {
     }
+
+    @Override
+    public String toString() {
+        return getName() + "(" + getHP() + ")";
+    }
 }

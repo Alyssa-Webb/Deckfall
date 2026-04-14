@@ -1,18 +1,17 @@
 package deckfall.DataClasses;
 
 import deckfall.Card.Card;
+import deckfall.Entity.Entity;
 import deckfall.Entity.Slayer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RelevantGameData {
     private final List<Card> cards;
-    private final List<String> enemies;
-    //TODO: get rid of slayer
+    private final List<Entity> enemies;
     private final Slayer slayer;
 
-    public RelevantGameData(List<Card> cards, List<String> enemies, Slayer slayer) {
+    public RelevantGameData(List<Card> cards, List<Entity> enemies, Slayer slayer) {
         this.cards = cards;
         this.enemies = enemies;
         this.slayer = slayer;
@@ -22,7 +21,7 @@ public class RelevantGameData {
         return cards;
     }
 
-    public List<String> getEnemies() {
+    public List<Entity> getEnemies() {
         return enemies;
     }
 
