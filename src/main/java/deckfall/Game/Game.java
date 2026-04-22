@@ -27,6 +27,8 @@ public class Game {
     public Game(Slayer playerCharacter, Tower tower) {
         this.slayer = playerCharacter;
         this.tower = tower;
+        //remove this later
+        currentTurnHolder = slayer;
     }
 
     // if it's valid, then it returns an empty string. Otherwise, it returns the reason why the move is invalid.
@@ -81,6 +83,7 @@ public class Game {
     }
 
     public SideEffect getSideEffect() {
+        //TODO: make this non-trivial
         events.pop();
         return new SideEffect(SideEffectType.ENEMY_DEATH, "Enemy");
     }

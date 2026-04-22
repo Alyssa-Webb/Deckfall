@@ -80,7 +80,7 @@ public abstract class Entity {
     public String evalMove(Card selectedCard, Entity target) {
         //TODO: eval whether the card is in the entity's hand, whether they have enough energy/mana? to use it,
         // and whether the selected target is valid for the type of card selected. If any are false, return a string explaining that
-        return "";
+        return "Cannot play cards rn. Try passing instead.";
     }
 
     public void pass() {
