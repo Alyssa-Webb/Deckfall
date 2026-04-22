@@ -1,7 +1,5 @@
 package deckfall.Tower;
 
-import deckfall.Entity.Entity;
-
 import java.util.LinkedList;
 
 public class Level {
@@ -11,11 +9,14 @@ public class Level {
         this.battles = battles;
     }
 
-    public boolean levelOver() {
+    public boolean levelIsCleared() {
         return battles.isEmpty();
     }
 
     public Battle getNextBattle(){
+        if (levelIsCleared()) {
+            throw new IllegalStateException("No battles remaining in this level.");
+        }
         return battles.pop();
     }
 }
