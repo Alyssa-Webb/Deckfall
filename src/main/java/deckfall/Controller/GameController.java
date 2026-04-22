@@ -88,8 +88,9 @@ public class GameController {
         @Override
         public void ActionPerformed(EntityAction e) {
             String isMoveValid = game.evalValidityOfMove(e);
-            if(!isMoveValid.isEmpty()){
+            if(isMoveValid.isEmpty()){
                 game.endSlayerTurn();
+            } else {
                 view.onInvalidMoveSelected(isMoveValid);
             }
             /*Action action = () -> {
@@ -97,6 +98,7 @@ public class GameController {
             };*/
             if(e.getAction_enum() == MoveTypes.PASS || e.getAction_enum() == MoveTypes.USE_CARD){
                 gameState = game.nextGameState();
+                next();
             }
 
             // send the ActionEvent (or wtv I Really end up goin with) to game.play(ActionEvent)

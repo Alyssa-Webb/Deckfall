@@ -2,7 +2,6 @@ package deckfall.Observer;
 
 import deckfall.Card.Card;
 import deckfall.DataClasses.RelevantGameData;
-import deckfall.Entity.Enemy;
 import deckfall.Entity.IntentType;
 import deckfall.Controller.Listener;
 import deckfall.DataClasses.EntityAction;
@@ -68,7 +67,7 @@ public class ConsoleLogger implements GameEventObserver {
                 case 3:
                     successfullyMadeMove = true;
                     System.out.println("You passed your turn.");
-                    displayFinishedListener.ActionPerformed(new EntityAction().setAction_enum(MoveTypes.PASS));
+                    userInputListener.ActionPerformed(new EntityAction().setAction_enum(MoveTypes.PASS));
                     break;
                 case 4:
                     System.out.println("You did a lil jig!\nNothing happened.");
@@ -136,13 +135,12 @@ public class ConsoleLogger implements GameEventObserver {
                 selectedTarget = enemies.get(userSelection);
             }
         }
-        /*userInputListener.ActionPerformed(new EntityAction()
+        userInputListener.ActionPerformed(new EntityAction()
                 .setAction_enum(MoveTypes.USE_CARD)
                 .setSelectedCard(selectedCard)
                 .setTarget(selectedTarget)
-        );*/
-        // will be swapped to return true, once we have levels and battles that the user can play
-        return false;
+        );
+        return true;
     }
 
     private void handleGetCardDescription(List<Card> cards) {
