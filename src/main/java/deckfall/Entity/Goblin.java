@@ -7,12 +7,12 @@ public class Goblin extends Enemy {
     private static final int DEFAULT_HEALTH = 15;
     private IntentType currentIntent;
     private static final Random rand = new Random();
-    // private static final String DEFAULT_GOBLIN_DESCRIPTION = "Goblin. Goblin fights with wrench. Goblin does not know how to defend itself..."
+    private static final String DEFAULT_GOBLIN_DESCRIPTION = "Goblin. Goblin fights with wrench. Goblin does not know how to defend itself...";
 
-    public Goblin() { super(DEFAULT_GOBLIN_NAME, DEFAULT_HEALTH); }
+    public Goblin() { super(DEFAULT_GOBLIN_NAME, DEFAULT_HEALTH, DEFAULT_GOBLIN_DESCRIPTION); }
 
     public Goblin(String enemyName, int healthPoints){
-        super(enemyName, healthPoints);
+        super(enemyName, healthPoints, DEFAULT_GOBLIN_DESCRIPTION);
     }
 
     // Goblin -- Only fights
@@ -24,14 +24,18 @@ public class Goblin extends Enemy {
     public void executeIntent (Slayer slayer) {
         if (currentIntent == IntentType.ATTACK) {
             int damage = rand.nextInt(11);
-            if (damage == 0) {
-                System.out.println(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
-            } else if (1 <= damage && damage <= 5) {
-                System.out.println(getName() + " pokes you with its wrench, dealing *" + damage + "* damage!");
-            } else {
-                System.out.println(getName() + " swings their wrench, dealing *" + damage + "* damage with the hook of the wrench!");
-            }
+            printAttackMessage(
+                    damage,
+                    "pokes you with its wrench, dealing *{damage}* damage!",
+                    "swings their wrench, dealing *{damage}* damage with the hook of the wrench!",
+                    5
+            );
             slayer.takeDamage(damage);
         }
+    }
+
+    @Override
+    public IntentType getCurrentIntent() {
+        return currentIntent;
     }
 }
