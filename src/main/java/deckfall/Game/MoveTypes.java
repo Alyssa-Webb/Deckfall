@@ -7,4 +7,5 @@ public enum MoveTypes {
     GET_ENTITY_INFO,
     GET_ENTITY_DESCRIPTION,
     PASS,
+    END_TURN,
 }
