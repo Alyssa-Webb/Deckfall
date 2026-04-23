@@ -83,6 +83,8 @@ public abstract class Entity {
     public int getHP()          { return healthPoints; }
     public int getMaxHP()       { return maxHealthPoints; }
     public List<Card> getHand() { return hand; }
+    public int getDrawPileSize()   { return deck.size(); }
+    public int getDiscardPileSize() { return discardPile.size(); }
     public int getBlock()       { return block; }
 
     public String evalMove(Card selectedCard, Entity target) {
