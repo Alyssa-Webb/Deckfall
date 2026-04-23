@@ -1,9 +1,11 @@
 package deckfall.Entity;
 
-import deckfall.Card.*;
+import deckfall.Card.Card;
+import deckfall.Factory.CardFactory;
 
 public class Slayer extends Entity {
     private static final String DEFAULT_SLAYER_NAME = "Slayer";
+    private static final String DEFAULT_SLAYER_DESCRIPTION = "Slayer. A battle-worn adventurer climbing the tower floor by floor.";
     private static final int DEFAULT_HEALTH = 50;
     private static final int DEFAULT_DRAW_COUNT = 5;
     private static final int DEFAULT_MAX_ENERGY = 3;
@@ -20,18 +22,19 @@ public class Slayer extends Entity {
     }
 
     public Slayer(String slayerName, int healthPoints) {
-        super(slayerName, healthPoints);
+        super(slayerName, healthPoints, DEFAULT_SLAYER_DESCRIPTION);
         this.maxEnergy = DEFAULT_MAX_ENERGY;
         this.energy    = maxEnergy;
         this.block     = 0;
-        addToDeck(DEFAULT_CARD_DECK);
+        addToDeck(CardFactory.createStarterPlayerDeck());
     }
 
     // Start and End Turn Methods
 
+    @Override
     public void startTurn() {
+        super.startTurn();
         this.energy = maxEnergy;
-        this.block = 0;
         drawHand(DEFAULT_DRAW_COUNT);
     }
 
@@ -39,16 +42,11 @@ public class Slayer extends Entity {
         discardHand();
     }
 
-
     // Card Methods
-    // TODO print statements?
     public boolean playCard(Card card, Entity enemy) {
-        if (!hand.contains(card)) {
-            System.out.println("Card not in hand.");
-            return false;
-        }
-        if (energy < card.getEnergyCost()) {
-            System.out.println("Not enough energy to play " + card.getName());
+        String moveError = evalMove(card, enemy);
+        if (!moveError.isEmpty()) {
+            System.out.println(moveError);
             return false;
         }
 
@@ -57,6 +55,22 @@ public class Slayer extends Entity {
         hand.remove(card);
         discardPile.add(card);
         return true;
+    }
+
+    @Override
+    public String evalMove(Card selectedCard, Entity target) {
+        // Call the parent validation (hand check, target check)
+        String baseValidation = super.evalMove(selectedCard, target);
+        if (!baseValidation.isEmpty()) {
+            return baseValidation;
+        }
+
+        // Add the Slayer-specific Energy check
+        if (this.energy < selectedCard.getEnergyCost()) {
+            return "Not enough energy (" + this.energy + "/" + selectedCard.getEnergyCost() + ")";
+        }
+
+        return "";
     }
 
     // Getter Methods
