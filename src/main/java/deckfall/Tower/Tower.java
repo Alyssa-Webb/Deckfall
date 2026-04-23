@@ -6,9 +6,8 @@ import java.util.List;
 public class Tower {
     LinkedList<Level> floors;
 
-    public Tower(){
+    public Tower() { this.floors = new LinkedList<>(); }
 
-    }
     public Tower(LinkedList<Level> floors) {
         this.floors = floors;
     }
@@ -18,6 +17,9 @@ public class Tower {
     }
 
     public Level getNextLevel() {
+        if (floors.isEmpty()) {
+            return null;
+        }
         return floors.pop();
     }
 }
