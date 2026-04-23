@@ -9,10 +9,15 @@ import org.junit.jupiter.api.Test;
 
 public class MVCTest {
     @Test
-    void TestMVC(){
+    void MVCTest() {
+        // Simulate user choices:
+        String simulatedInput = "4\n3\n";
+        System.setIn(new java.io.ByteArrayInputStream(simulatedInput.getBytes()));
+
         ConsoleLogger view = new ConsoleLogger();
         Game game = new Game(new Slayer(), new Tower());
         GameController controller = new GameController(game, view);
+
         controller.gameStart();
     }
 }
