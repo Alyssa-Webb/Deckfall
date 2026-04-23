@@ -24,12 +24,15 @@ public class Goblin extends Enemy {
     public void executeIntent (Slayer slayer) {
         if (currentIntent == IntentType.ATTACK) {
             int damage = rand.nextInt(11);
-            printAttackMessage(
-                    damage,
-                    "pokes you with its wrench, dealing *{damage}* damage!",
-                    "swings their wrench, dealing *{damage}* damage with the hook of the wrench!",
-                    5
-            );
+            if (damage == 0) {
+                System.out.println(getName() + " fumbles its wrench and misses entirely!");
+            } else if (damage <= 3) {
+                System.out.println(getName() + " pokes you with its wrench, dealing *" + damage + "* damage!");
+            } else if (damage <= 7) {
+                System.out.println(getName() + " swings the wrench in a wide arc, dealing *" + damage + "* damage!");
+            } else {
+                System.out.println(getName() + " lands a brutal hook from the wrench, dealing *" + damage + "* damage!");
+            }
             slayer.takeDamage(damage);
         }
     }

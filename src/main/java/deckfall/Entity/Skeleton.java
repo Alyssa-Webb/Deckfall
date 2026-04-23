@@ -22,12 +22,15 @@ public class Skeleton extends Enemy {
     public void executeIntent (Slayer slayer) {
         if (currentIntent == IntentType.ATTACK) {
             int damage = rand.nextInt(11);
-            printAttackMessage(
-                    damage,
-                    "throws a jab, dealing *{damage}* damage!",
-                    "commits to a right hook, dealing *{damage}* damage!",
-                    5
-            );
+            if (damage == 0) {
+                System.out.println(getName() + " looses an arrow that rattles harmlessly off stone.");
+            } else if (damage <= 3) {
+                System.out.println(getName() + " clips you with a glancing shot, dealing *" + damage + "* damage!");
+            } else if (damage <= 7) {
+                System.out.println(getName() + " plants its feet and fires true, dealing *" + damage + "* damage!");
+            } else {
+                System.out.println(getName() + " lands a piercing bone-tipped arrow, dealing *" + damage + "* damage!");
+            }
             slayer.takeDamage(damage);
         } else if (currentIntent == IntentType.DEFEND) {
             int block = rand.nextInt(5) + 5;

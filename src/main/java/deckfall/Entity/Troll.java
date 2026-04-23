@@ -23,12 +23,15 @@ public class Troll extends Enemy {
     public void executeIntent (Slayer slayer) {
         if (currentIntent == IntentType.ATTACK) {
             int damage = rand.nextInt(16);
-            printAttackMessage(
-                    damage,
-                    "throws a jab, dealing *{damage}* damage!",
-                    "commits to a right hook, dealing *{damage}* damage!",
-                    7
-            );
+            if (damage == 0) {
+                System.out.println(getName() + " slams the ground and misses you completely.");
+            } else if (damage <= 5) {
+                System.out.println(getName() + " clips you with a heavy jab, dealing *" + damage + "* damage!");
+            } else if (damage <= 10) {
+                System.out.println(getName() + " crashes a fist into you, dealing *" + damage + "* damage!");
+            } else {
+                System.out.println(getName() + " roars and delivers a monstrous hook, dealing *" + damage + "* damage!");
+            }
             slayer.takeDamage(damage);
         } else if (currentIntent == IntentType.DEFEND) {
             int block = rand.nextInt(5) + 5;
