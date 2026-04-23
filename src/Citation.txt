@@ -1,0 +1,52 @@
+This text file contains the prompts used for this project. ALl prompts were dedicated to the GUI as this is, quote
+"not a GUI course".
+
+List of prompts used:
+"""
+    For my Java class' final project, we're allowed to AI generate our GUI. I made our consoleLogger compatible with MVC, so theoretically a GUI should be able to replace it smoothly with no changes to the Model or Controller.
+
+    Here's our current view:
+
+    (I then pasted it our code for ConsoleLogger. For obvious reasons, I'm not including it here lol)
+
+    The user's cards change every turn. Also, we have no preference between Swing and Java2D -- whatever is easier for us to edit, to make the GUI more to what we want. Don't write any code -- first, plan it out with me
+"""
+
+"""
+    The general structure is as follows: you're in a tower, and each floor you fight a couple battles. The enemies on screen will change as enemies die and battles start/end. You should be able to click yourself in order to 'do a little jig' (which either prints something or moves the Slayer sprite up and down a bit). Your and enemy stats should be visible at all times (so yes, enemies should only be clickable after you select a card).
+
+    Card:
+
+    (I then pasted the abstract Card class)
+
+    Entity:
+
+    (I then pasted the abstract Entity class)
+
+    We will be adding a sprite/image section to cards and entities. Please create us a GUI using Swing
+"""
+
+Context for the next one: instead of creating a class, it just gave a general outline of what we should do with swing, to help us understand swing.
+"""
+    I do understand swing. My teacher is allowing us to have AI completely write the GUI (which is great, because I've written Swing code before, and it is tedious). In his words: "this isn't a GUI class"
+"""
+"""
+    Clicking a card immediately enters targeting mode. And yes, those assumptions are all correct
+"""
+
+I (Alyssa Webb) worked to get the GUI more customized to our current application, such as adding the ability to view enemy descriptions,
+card descriptions and make moves. Here are the prompts I used, using Cursor. The attatched file is the SwngGameView file that Adara had
+started with.
+
+"""
+Today, I want to work on the Swing GUI. I will copy what we have in the attatched file.
+- Make a starting screen for the Player (Slayer). Allow them to enter their name and an option to start a new game.
+- After clicking start, they should have a log telling them the story of the tower (we will insert this description) along with a log stating what level they are entering, as well what battle (out of however many, for example, Floor 1 of 10).
+- The player should have a display for their health, shield, energy.
+- Also, please explain what coloring and sprite schema is possible using Swing, for example, since we are traversing a tower, I want to make the background GUI black and gray brick, with our chosen sprites (for example, a Skeleton) on top of it. I also want to cards to be larger vertically, allowing for color coding. For example, a HealCard may be green, but an AttackCard would be red.
+- Please make it so I do not need to click on the Cards to see what their traits are
+- Make it so I can see how much damage the Slayer (player) is dealing, as well as how much the Enemy is dealing.
+- Please move the "View Card Description", "Pass Turn", and "View Enemy Descriptions" below the GUI terminal to the right of the cards so that the Player has access to all possible options in one location.
+- When clicking "View Enemy Description" and "View Card Description", please make it prompt the player to select the designated card or enemy, instead of the reverse.
+- When the player chooses a Defense or Heal card, please prompt them to make sure they selected the correct card.
+"""
