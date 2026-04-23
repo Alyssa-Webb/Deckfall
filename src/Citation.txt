@@ -50,3 +50,11 @@ Today, I want to work on the Swing GUI. I will copy what we have in the attatche
 - When clicking "View Enemy Description" and "View Card Description", please make it prompt the player to select the designated card or enemy, instead of the reverse.
 - When the player chooses a Defense or Heal card, please prompt them to make sure they selected the correct card.
 """
+
+I used Google Gemini to produce the sprites used, here are my prompts:
+"""
+I want you to generate me an RPG style goblin holding a wrench. I need this to have a transparent background for my game. Pixelated and 2D.
+I want this same style, instead, for a skeleton who is using a bow and a small shield.
+Perfect! Please do this same idea, now to make a blue Troll, with big bloody fists.
+Now make one for the Demon Lord. He uses dark energy that is created by consuming souls. He should be large, and daunting, with a heavy staff.
+"""
