@@ -1,6 +1,7 @@
 package deckfall.Observer;
 
 import deckfall.Card.Card;
+import deckfall.Card.TargetType;
 import deckfall.DataClasses.RelevantGameData;
 import deckfall.Entity.IntentType;
 import deckfall.Controller.Listener;
@@ -19,10 +20,11 @@ public class ConsoleLogger implements GameEventObserver {
     private Listener userInputListener;
 
     private List<String> userMoves = List.of(
-            "get card description",
-            "play card",
-            "pass",
-            "do a lil jig"
+            "Get card description",
+            "Get enemy description",
+            "Play a card",
+            "Pass action",
+            "End turn"
     );
 
     private Integer tryParsingInt(String userInput) {
@@ -31,6 +33,20 @@ public class ConsoleLogger implements GameEventObserver {
         } catch (NumberFormatException e) {
             return null;
         }
+    }
+
+    private String readNextLine() {
+        if (!scanner.hasNextLine()) {
+            return null;
+        }
+        return scanner.nextLine();
+    }
+
+    private boolean confirmSelfTargetCard(Card card) {
+        System.out.println("You selected " + card.getName() + ".");
+        System.out.println("This card targets yourself. Use it? (y/n)");
+        String input = readNextLine();
+        return input != null && input.trim().equalsIgnoreCase("y");
     }
 
     @Override
@@ -51,10 +67,16 @@ public class ConsoleLogger implements GameEventObserver {
             }
             System.out.println("Input the number of the move you'd like to make: ");
 
-            String move = scanner.nextLine();
+            String move = readNextLine();
+            if (move == null) {
+                successfullyMadeMove = true;
+                System.out.println("No more input available. Ending turn.");
+                userInputListener.ActionPerformed(new EntityAction().setAction_enum(MoveTypes.END_TURN));
+                continue;
+            }
             Integer moveNum = tryParsingInt(move);
             if(moveNum == null || moveNum > userMoves.size() || moveNum <= 0) {
-                System.out.println("Input a number between 1 and four");
+                System.out.println("Input a number (1, 2, 3, 4, or 5).");
                 continue;
             }
             switch(moveNum){
@@ -62,15 +84,19 @@ public class ConsoleLogger implements GameEventObserver {
                     handleGetCardDescription(gameData.getCards());
                     break;
                 case 2:
-                    successfullyMadeMove = handlePlayCard(gameData.getCards(), gameData.getEnemies(), gameData.getSlayer());
+                    handleGetEnemyDescription(gameData.getEnemies(), gameData.getSlayer());
                     break;
                 case 3:
-                    successfullyMadeMove = true;
-                    System.out.println("You passed your turn.");
-                    userInputListener.ActionPerformed(new EntityAction().setAction_enum(MoveTypes.PASS));
+                    successfullyMadeMove = handlePlayCard(gameData.getCards(), gameData.getEnemies(), gameData.getSlayer());
                     break;
                 case 4:
-                    System.out.println("You did a lil jig!\nNothing happened.");
+                    System.out.println("You passed your action.");
+                    userInputListener.ActionPerformed(new EntityAction().setAction_enum(MoveTypes.PASS));
+                    break;
+                case 5:
+                    successfullyMadeMove = true;
+                    System.out.println("You ended your turn.");
+                    userInputListener.ActionPerformed(new EntityAction().setAction_enum(MoveTypes.END_TURN));
                     break;
             }
         }
@@ -84,7 +110,11 @@ public class ConsoleLogger implements GameEventObserver {
                 System.out.println("\t" + (i + 1) + ": " + cards.get(i).getSimpleString());
             }
             System.out.println("\t" + (cards.size()+1) + ": Back to move selection");
-            userSelection = tryParsingInt(scanner.nextLine());
+            String line = readNextLine();
+            if (line == null) {
+                return cards.size() + 1;
+            }
+            userSelection = tryParsingInt(line);
             if (userSelection == null || userSelection <= 0) {
                 System.out.println("Please type a number, greater than 0");
             }
@@ -120,8 +150,21 @@ public class ConsoleLogger implements GameEventObserver {
             }
         }
 
-        // TODO: implement a check here for whether the card's target type is AOE.
-        // TODO: implement AOE functionality in Card
+        // Stretch goal: implement a check here for whether the card's target type is AOE.
+        // Stretch goal: implement AOE functionality in Card
+
+        if (selectedCard.getTargetType() == TargetType.SELF_ONLY) {
+            if (!confirmSelfTargetCard(selectedCard)) {
+                System.out.println("Cancelled card use.");
+                return false;
+            }
+            userInputListener.ActionPerformed(new EntityAction()
+                    .setAction_enum(MoveTypes.USE_CARD)
+                    .setSelectedCard(selectedCard)
+                    .setTarget(slayer)
+            );
+            return true;
+        }
 
         Entity selectedTarget = null;
         while(selectedTarget == null) {
@@ -156,21 +199,20 @@ public class ConsoleLogger implements GameEventObserver {
         System.out.println(selectedCard + "\n");
     }
 
-    /* Entities don't currently have a description. neither do enemies. This is a stretch goal for if we ever add those
     private void handleGetEnemyDescription(List<Entity> enemies, Entity slayer) {
-        Entity selectedTarget = null;
-        while(selectedTarget == null) {
-            int userSelection = userSelectTargetNumber(enemies) -1;
-            if(userSelection <= enemies.size() +1) {
-                return;
-            } else if (userSelection == enemies.size()) {
-                System.out.println("It's you!");
-            }
-            else {
-                System.out.println(enemies.get(userSelection).getDescription());
-            }
+        int userSelection = userSelectTargetNumber(enemies) - 1;
+        if (userSelection > enemies.size()) {
+            return;
         }
-    }*/
+
+        if (userSelection == enemies.size()) {
+            System.out.println(slayer.getName() + ":\n\t" + slayer.getDescription() + "\n");
+            return;
+        }
+
+        Entity selectedEnemy = enemies.get(userSelection);
+        System.out.println(selectedEnemy.getName() + ":\n\t" + selectedEnemy.getDescription() + "\n");
+    }
 
     @Override
     public void addDisplayFinishedListener(Listener listener) {
