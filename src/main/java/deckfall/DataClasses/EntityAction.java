@@ -15,6 +15,7 @@ public class EntityAction {
     private MoveTypes action_enum = DEFAULT_ACTION_ENUM;
     private Card selectedCard;
     private String cardID;
+    private String playerName;
 
     public EntityAction setTarget(Entity target){
         this.target = target;
@@ -62,5 +63,14 @@ public class EntityAction {
     }
     public String getCardID() {
         return cardID;
+    }
+
+    public EntityAction setPlayerName(String playerName) {
+        this.playerName = playerName;
+        return this;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 }
