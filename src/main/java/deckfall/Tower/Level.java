@@ -13,6 +13,10 @@ public class Level {
         return battles.isEmpty();
     }
 
+    public boolean hasNextBattle() {
+        return !battles.isEmpty();
+    }
+
     public Battle getNextBattle(){
         if (levelIsCleared()) {
             throw new IllegalStateException("No battles remaining in this level.");
