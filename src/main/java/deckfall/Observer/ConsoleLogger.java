@@ -81,15 +81,16 @@ public class ConsoleLogger implements GameEventObserver {
             }
             switch(moveNum){
                 case 1:
-                    handleGetCardDescription(gameData.getCards());
+                    requestCardDescriptionMove(gameData.getCards());
                     break;
                 case 2:
-                    handleGetEnemyDescription(gameData.getEnemies(), gameData.getSlayer());
+                    requestEntityDescriptionMove(gameData.getEnemies(), gameData.getSlayer());
                     break;
                 case 3:
                     successfullyMadeMove = handlePlayCard(gameData.getCards(), gameData.getEnemies(), gameData.getSlayer());
                     break;
                 case 4:
+                    successfullyMadeMove = true;
                     System.out.println("You passed your action.");
                     userInputListener.ActionPerformed(new EntityAction().setAction_enum(MoveTypes.PASS));
                     break;
@@ -186,9 +187,9 @@ public class ConsoleLogger implements GameEventObserver {
         return true;
     }
 
-    private void handleGetCardDescription(List<Card> cards) {
+    private void requestCardDescriptionMove(List<Card> cards) {
         Card selectedCard = null;
-        while(selectedCard == null) {
+        while (selectedCard == null) {
             int userSelection = userSelectCardNumber(cards);
             if (userSelection <= cards.size()) {
                 selectedCard = cards.get(userSelection - 1);
@@ -196,22 +197,23 @@ public class ConsoleLogger implements GameEventObserver {
                 return;
             }
         }
-        System.out.println(selectedCard + "\n");
+        userInputListener.ActionPerformed(new EntityAction()
+                .setAction_enum(MoveTypes.GET_CARD_DESCRIPTION)
+                .setSelectedCard(selectedCard));
     }
 
-    private void handleGetEnemyDescription(List<Entity> enemies, Entity slayer) {
+    private void requestEntityDescriptionMove(List<Entity> enemies, Entity slayer) {
         int userSelection = userSelectTargetNumber(enemies) - 1;
         if (userSelection > enemies.size()) {
             return;
         }
 
-        if (userSelection == enemies.size()) {
-            System.out.println(slayer.getName() + ":\n\t" + slayer.getDescription() + "\n");
-            return;
-        }
-
-        Entity selectedEnemy = enemies.get(userSelection);
-        System.out.println(selectedEnemy.getName() + ":\n\t" + selectedEnemy.getDescription() + "\n");
+        Entity target = userSelection == enemies.size()
+                ? slayer
+                : enemies.get(userSelection);
+        userInputListener.ActionPerformed(new EntityAction()
+                .setAction_enum(MoveTypes.GET_ENTITY_DESCRIPTION)
+                .setTarget(target));
     }
 
     @Override
@@ -226,7 +228,9 @@ public class ConsoleLogger implements GameEventObserver {
 
     @Override
     public void defaultNotif(String message) {
-
+        if (message != null && !message.isBlank()) {
+            System.out.println(message);
+        }
     }
 
     // Floor Events
@@ -253,7 +257,9 @@ public class ConsoleLogger implements GameEventObserver {
 
     @Override
     public void onInvalidMoveSelected(String message) {
-
+        if (message != null && !message.isBlank()) {
+            System.out.println(message);
+        }
     }
 
     @Override
@@ -344,6 +350,17 @@ public class ConsoleLogger implements GameEventObserver {
     public void startGame() {
         System.out.println("Game started.");
         displayFinishedListener.ActionPerformed(emptyEntityAction);
+    }
+
+    // Continue the game
+    @Override
+    public void promptContinue(String message, Runnable onAcknowledge) {
+        System.out.println("\n" + message);
+        System.out.println("Press Enter when you are ready to continue...");
+        readNextLine();
+        if (onAcknowledge != null) {
+            onAcknowledge.run();
+        }
     }
 
 }
