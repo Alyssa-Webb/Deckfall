@@ -7,4 +7,8 @@ public abstract class DefendCard extends Card {
         super(name, energyCost, description, CardType.SHIELD, TargetType.SELF_ONLY);
         this.damageBlocked = damageBlocked;
     }
+
+    public int getBlockAmount() {
+        return damageBlocked;
+    }
 }
