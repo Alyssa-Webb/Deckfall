@@ -17,6 +17,10 @@ public class Level {
         return !battles.isEmpty();
     }
 
+    public int remainingBattles() {
+        return battles.size();
+    }
+
     public Battle getNextBattle(){
         if (levelIsCleared()) {
             throw new IllegalStateException("No battles remaining in this level.");
