@@ -106,10 +106,6 @@ public abstract class Entity {
         return "";
     }
 
-    public void pass() {
-        // Logic for passing the turn
-    }
-
     public void startTurn() {
         this.block = 0;
     }
