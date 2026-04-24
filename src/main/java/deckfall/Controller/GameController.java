@@ -2,114 +2,111 @@ package deckfall.Controller;
 
 import deckfall.DataClasses.EntityAction;
 import deckfall.DataClasses.RelevantGameData;
-import deckfall.DataClasses.SideEffect;
+import deckfall.Entity.Slayer;
 import deckfall.Game.Game;
 import deckfall.Game.GameState;
 import deckfall.Game.MoveTypes;
 import deckfall.Observer.GameEventObserver;
+import deckfall.Tower.Difficulty;
+import deckfall.Tower.TowerBuilder;
 
 public class GameController {
     private Game game;
     private GameState gameState = GameState.GAME_START;
     // I'm concerned about a race condition when it comes to having multiple 'Observers' since they're also gonna need to manage input (ugh)
-    private GameEventObserver view;
+    private final GameEventObserver view;
+    private final InformationDisplayFinishedListener displayContinuePlayingListener = new InformationDisplayFinishedListener();
 
     public GameController(Game game, GameEventObserver view) {
-        this.game = game;
         this.view = view;
-        view.addDisplayFinishedListener(new InformationDisplayFinishedListener());
+        setGame(game);
+        view.addDisplayFinishedListener(displayContinuePlayingListener);
         view.addUserInputListener(new UserInputReceivedListener());
     }
 
+    private void setGame(Game game) {
+        this.game = game;
+        this.game.setObserver(view);
+    }
+
     public void gameStart() {
+        gameState = GameState.GAME_START;
         view.startGame();
     }
 
-    private void next() {
-        //do different things depending on the current state
-        switch (gameState){
+    private void syncFromGame() {
+        gameState = game.getGameState();
+    }
+
+    private void nextState() {
+        switch (gameState) {
+            /*
             case NOTIFYING_OF_SIDE_EFFECTS:
-                SideEffect sideEffect = game.getSideEffect();
-                evalSideEffect(sideEffect);
-                break;
-            case ENEMY_TURN:
-                break;
-            case PLAYER_TURN:
-                //view.requestUserInput(game.getCurrentTurnHolder().getHand());
-                game.startSlayerTurn();
-                view.requestUserInput( game.getRelevantGameData() );
-                break;
-            case BATTLE_START:
-                break;
-            case BATTLE_END:
-                break;
-            case LEVEL_START:
-                break;
-            case LEVEL_END:
-                break;
-            case GAME_WIN:
-                view.onVictory();
-                break;
-            case GAME_LOSS:
-                view.onDefeat();
-            case GAME_OVER:
-                break;
-            case GAME_START:
-                view.startGame();
-                break;
-            case null, default:
-                System.err.println("I don't think this will be necessary but ¯\\_(ツ)_/¯");
-                break;
-        }
+                    SideEffect sideEffect = game.getSideEffect();
+                    evalSideEffect(sideEffect);
+                    break;
+             */
+            case PLAYER_TURN -> view.requestUserInput(game.getRelevantGameData());
+            case AWAITING_CONTINUE_PROMPT -> view.promptContinue(game.getContinuePromptMessage(), this::onContinueAcknowledged);
+            case GAME_WIN, GAME_LOSS -> {}
+            case GAME_START -> {}
+        }   
     }
 
-    private void evalSideEffect(SideEffect sideEffect) {
-        switch(sideEffect.sideEffectType){
-            case ENEMY_DEATH:
-                view.onEnemyDefeat("Enemy");
-                break;
-            case null:
-                throw new RuntimeException("Something is wrong with the way game changes states");
-            default:
-                view.defaultNotif(sideEffect.gameData);
-        }
+    // Asks the player if they want to continue (after a battle / level)
+    private void onContinueAcknowledged() {
+        displayContinuePlayingListener.ActionPerformed(new EntityAction());
     }
-
 
     public class InformationDisplayFinishedListener implements Listener {
         @Override
-        public void ActionPerformed(EntityAction e) {
-            gameState = game.nextGameState();
-            next();
+        public void ActionPerformed(EntityAction entityAction) {
+            game.onDisplayAcknowledged(entityAction);
+            syncFromGame();
+            nextState();
         }
     }
 
     public class UserInputReceivedListener implements Listener {
         @Override
-        public void ActionPerformed(EntityAction e) {
-            String isMoveValid = game.evalValidityOfMove(e);
-            if(isMoveValid.isEmpty()){
-                game.endSlayerTurn();
-            } else {
-                view.onInvalidMoveSelected(isMoveValid);
-            }
-            /*Action action = () -> {
-                System.out.println("A");
-            };*/
-            if(e.getAction_enum() == MoveTypes.PASS || e.getAction_enum() == MoveTypes.USE_CARD){
-                gameState = game.nextGameState();
-                next();
+        public void ActionPerformed(EntityAction entityAction) {
+            if (entityAction.getAction_enum() == MoveTypes.RESTART_GAME) {
+                setGame(new Game(new Slayer(), TowerBuilder.buildTower(Difficulty.EASY)));
+                gameStart();
+                return;
             }
 
-            // send the ActionEvent (or wtv I Really end up goin with) to game.play(ActionEvent)
-            //PlayResult playResult = game.play(ActionEvent);
-            /*if(playResult.failure) {
-                //manager.onMoveInability(playResult);
-            } else {
-                manager.onMovePlay(playResult);
-                evalNextState();
+            String inputError = game.handleSlayerInput(entityAction);
+            if (!inputError.isEmpty()) {
+                view.onInvalidMoveSelected(inputError);
+                return;
             }
-             */
+            syncFromGame();
+            MoveTypes move = entityAction.getAction_enum();
+            if (move == MoveTypes.GET_CARD_DESCRIPTION || move == MoveTypes.GET_ENTITY_DESCRIPTION) {
+                return;
+            }
+            if (gameState == GameState.PLAYER_TURN) {
+                RelevantGameData data = game.getRelevantGameData();
+                Thread t = new Thread(new RequestUserInputTask(data), "deckfall-request-input");
+                t.setDaemon(true);
+                t.start();
+                return;
+            }
+            nextState();
+        }
+    }
+
+    private final class RequestUserInputTask implements Runnable {
+        private final RelevantGameData data;
+
+        private RequestUserInputTask(RelevantGameData data) {
+            this.data = data;
+        }
+
+        @Override
+        public void run() {
+            view.requestUserInput(data);
         }
     }
 }
