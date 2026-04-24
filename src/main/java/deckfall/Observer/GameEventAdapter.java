@@ -91,14 +91,10 @@ public class GameEventAdapter implements GameEventObserver {
     public void onDecideIntent(String enemyName, IntentType intent) {}
 
     @Override
-    public void onEntityPass(String entityName) {
-
-    }
+    public void onEntityPass(String entityName) {}
 
     @Override
-    public void onEntityDamaged(String entityName, int damageReceived) {
-
-    }
+    public void onEntityDamaged(String entityName, int damageReceived) {}
 
     // Demon King Events
     @Override
@@ -112,11 +108,11 @@ public class GameEventAdapter implements GameEventObserver {
     public void onDefeat() {}
 
     @Override
-    public void requestUserInput(RelevantGameData gameData) {
-    }
+    public void requestUserInput(RelevantGameData gameData) {}
 
     @Override
-    public void startGame() {
+    public void startGame() {}
 
-    }
+    @Override
+    public void promptContinue(String message, Runnable onAcknowledge) {}
 }
