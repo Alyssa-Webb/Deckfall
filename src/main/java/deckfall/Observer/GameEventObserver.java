@@ -59,4 +59,6 @@ public interface GameEventObserver {
     void requestUserInput(RelevantGameData gameData);
 
     void startGame();
+
+    void promptContinue(String message, Runnable onAcknowledge);
 }
