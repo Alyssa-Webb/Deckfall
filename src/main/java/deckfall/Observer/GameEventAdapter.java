@@ -10,20 +10,16 @@ import java.util.List;
 
 // Middleman
 public class GameEventAdapter implements GameEventObserver {
+    // Add listeners
     @Override
-    public void addDisplayFinishedListener(Listener listener) {
-
-    }
-
-    @Override
-    public void addUserInputListener(Listener listener) {
-
-    }
+    public void addDisplayFinishedListener(Listener listener) {}
 
     @Override
-    public void defaultNotif(String message) {
+    public void addUserInputListener(Listener listener) {}
 
-    }
+    // Add string notification
+    @Override
+    public void defaultNotification(String message) {}
 
     // Floor Events
     @Override
@@ -37,17 +33,13 @@ public class GameEventAdapter implements GameEventObserver {
     public void onBattleEntry() {}
 
     @Override
-    public void onBattleChange(List<Entity> currentLivingPlayers, List<Entity> currentLivingFoes) {
-
-    }
+    public void onBattleChange(List<Entity> currentLivingPlayers, List<Entity> currentLivingFoes) {}
 
     @Override
     public void onBattleWin() {}
 
     @Override
-    public void onInvalidMoveSelected(String message) {
-
-    }
+    public void onInvalidMoveSelected(String message) {}
 
     // Turn Events
     @Override
@@ -76,7 +68,10 @@ public class GameEventAdapter implements GameEventObserver {
     @Override
     public void onEntityHeal(String entityName, int damageHealed) {}
 
-    // Card Events
+    @Override
+    public void onEntityDamaged(String entityName, int damageReceived) {}
+
+    // Card and Deck Events
     @Override
     public void onCardDrawn(Card card) {}
 
@@ -86,21 +81,10 @@ public class GameEventAdapter implements GameEventObserver {
     @Override
     public void onDeckShuffled() {}
 
-    // Enemy Intent
+    // Enemy Events
     @Override
     public void onDecideIntent(String enemyName, IntentType intent) {}
 
-    @Override
-    public void onEntityPass(String entityName) {
-
-    }
-
-    @Override
-    public void onEntityDamaged(String entityName, int damageReceived) {
-
-    }
-
-    // Demon King Events
     @Override
     public void onDemonKingFloor() {}
 
@@ -112,16 +96,11 @@ public class GameEventAdapter implements GameEventObserver {
     public void onDefeat() {}
 
     @Override
-    public void requestUserInput(RelevantGameData gameData) {
-    }
+    public void startGame() {}
 
     @Override
-    public void startGame() {
-
-    }
+    public void update(RelevantGameData relevantGameData) {}
 
     @Override
-    public void update(RelevantGameData relevantGameData) {
-
-    }
+    public void requestUserInput(RelevantGameData data) {{}}
 }
