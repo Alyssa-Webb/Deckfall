@@ -7,12 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameEventBus {
-    private static final GameEventBus GAME_EVENT_BUS  = new GameEventBus();
+    private static GameEventBus GAME_EVENT_BUS = null;
     private final List<GameEventObserver> observers = new ArrayList<>();
 
     private GameEventBus() {}
 
-    public static GameEventBus getGameEventBus() { return GAME_EVENT_BUS; }
+    public static GameEventBus getGameEventBus() {
+        if(GAME_EVENT_BUS == null){
+            GAME_EVENT_BUS = new GameEventBus();
+        }
+        return GAME_EVENT_BUS;
+    }
 
     public void registerObserver(GameEventObserver observer) {
         observers.add(observer);
