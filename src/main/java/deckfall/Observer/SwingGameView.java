@@ -301,39 +301,3 @@ public class SwingGameView extends JFrame implements GameEventObserver {
 
     }
 }
-
-
-/*
-TODO: add to a dedicated txt file? IntelliJ gives warnings about large, commented out section of code, so it seems to matter somewhat?
-List of prompts used:
-{
-    For my Java class' final project, we're allowed to AI generate our GUI. I made our consoleLogger compatible with MVC, so theoretically a GUI should be able to replace it smoothly with no changes to the Model or Controller.
-
-    Here's our current view:
-
-    (I then pasted it our code for ConsoleLogger. For obvious reasons, I'm not including it here lol)
-
-    The user's cards change every turn. Also, we have no preference between Swing and Java2D -- whatever is easier for us to edit, to make the GUI more to what we want. Don't write any code -- first, plan it out with me
-}
-{
-    The general structure is as follows: you're in a tower, and each floor you fight a couple battles. The enemies on screen will change as enemies die and battles start/end. You should be able to click yourself in order to 'do a little jig' (which either prints something or moves the Slayer sprite up and down a bit). Your and enemy stats should be visible at all times (so yes, enemies should only be clickable after you select a card).
-
-    Card:
-
-    (I then pasted the abstract Card class)
-
-    Entity:
-
-    (I then pasted the abstract Entity class)
-
-    We will be adding a sprite/image section to cards and entities. Please create us a GUI using Swing
-}
-Context for the next one: instead of creating a class, it just gave a general outline of what we should do with swing, to help us understand swing.
-{
-    I do understand swing. My teacher is allowing us to have AI completely write the GUI (which is great, because I've written Swing code before, and it is tedious). In his words: "this isn't a GUI class"
-}
-{
-    Clicking a card immediately enters targeting mode. And yes, those assumptions are all correct
-}
-It then provided me this class. Missing a couple methods, but IntelliJ made fixing that easy.
- */
