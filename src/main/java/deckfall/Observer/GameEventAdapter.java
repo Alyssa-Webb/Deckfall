@@ -71,6 +71,9 @@ public class GameEventAdapter implements GameEventObserver {
     @Override
     public void onEntityDamaged(String entityName, int damageReceived) {}
 
+    @Override
+    public void onNotEnoughEnergy(String entityName, Card card) {}
+
     // Card and Deck Events
     @Override
     public void onCardDrawn(Card card) {}
