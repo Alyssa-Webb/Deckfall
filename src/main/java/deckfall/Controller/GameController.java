@@ -1,28 +1,30 @@
 package deckfall.Controller;
 
 import deckfall.DataClasses.EntityAction;
-import deckfall.DataClasses.RelevantGameData;
 import deckfall.DataClasses.SideEffect;
 import deckfall.Game.Game;
 import deckfall.Game.GameState;
-import deckfall.Game.MoveTypes;
 import deckfall.Observer.GameEventObserver;
+import deckfall.Observer.GameEventBus;
 
 public class GameController {
-    private Game game;
+    private final Game game;
     private GameState gameState = GameState.GAME_START;
-    private GameEventObserver view;
+    private final GameEventObserver view;
+
 
     public GameController(Game game, GameEventObserver view) {
         this.game = game;
         this.view = view;
         view.addDisplayFinishedListener(new InformationDisplayFinishedListener());
         view.addUserInputListener(new UserInputReceivedListener());
+
     }
 
     public void gameStart() {
         game.startGame();
         view.startGame();
+        GameEventBus.getGameEventBus().registerObserver(view);
     }
 
     private void next() {
