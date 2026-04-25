@@ -1,6 +1,8 @@
 package deckfall.Entity;
 
 
+import deckfall.Die.RandomDie;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,16 +12,23 @@ public class Skeleton extends Enemy {
     private static final String DEFAULT_SKELETON_NAME = "Skeleton";
     private static final int DEFAULT_HEALTH = 10;
     private IntentType currentIntent;
-    private static final Random rand = new Random();
     // private static final String DEFAULT_SKELETON_DESCRIPTION = "Skeleton. Skeleton fights from a far, using a Bow and Shield. Since Skeleton is ranged, better chance at blocking."
 
-    public Skeleton() { super(DEFAULT_SKELETON_NAME, DEFAULT_HEALTH); }
+    private static final int ATTACK_RANGE = 15;
+    private static final int BLOCK_RANGE = 10;
+    private static final int MIN_BLOCK = 5;
+
+    public Skeleton() {
+        super(DEFAULT_SKELETON_NAME, DEFAULT_HEALTH);
+        changeAttackDie(new RandomDie(ATTACK_RANGE));
+        changeBlockDie(new RandomDie(BLOCK_RANGE));
+    }
 
     public Skeleton(String enemyName, int healthPoints){ super(enemyName, healthPoints); }
 
     // Skeleton -- fights with bow, blocks often.
     public void decideIntent() {
-        int roll = rand.nextInt(100);
+        int roll = intentDie.roll();
         if (roll < 50) { this.currentIntent = IntentType.ATTACK;}
         else { this.currentIntent = IntentType.DEFEND; }
         notifications.add(getName() + " prepares to " + currentIntent + "!");
@@ -27,7 +36,7 @@ public class Skeleton extends Enemy {
 
     public void executeIntent (Slayer slayer) {
         if (currentIntent == IntentType.ATTACK) {
-            int damage = rand.nextInt(0) + 5;
+            int damage = attackDie.roll();
             if (damage == 0) {
                 notifications.add(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
             }
@@ -39,7 +48,7 @@ public class Skeleton extends Enemy {
             }
             slayer.takeDamage(damage);
         } else if (currentIntent == IntentType.DEFEND) {
-            int block = rand.nextInt(5) + 5;
+            int block = blockDie.roll() + MIN_BLOCK;
             notifications.add(getName() + " is blocking! Blocked for *" + block + "* damage!");
         }
     }

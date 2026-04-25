@@ -1,21 +1,31 @@
 package deckfall.Entity;
 
+import deckfall.Die.Die;
+import deckfall.Die.RandomDie;
+
 import java.util.Random;
 
 public class DemonKing extends Enemy {
     private static final String DEFAULT_DEMON_KING_NAME = "Demon King";
     private static final int DEFAULT_HEALTH = 100;
     private IntentType currentIntent;
-    private static final Random rand = new Random();
-    // private static final String DEFAULT_SKELETON_DESCRIPTION = "Skeleton. Skeleton fights from a far, using a Bow and Shield. Since Skeleton is ranged, better chance at blocking."
 
-    public DemonKing() { super(DEFAULT_DEMON_KING_NAME, DEFAULT_HEALTH); }
+    //private static final int INTENT_RANGE = 100;
+    private static final int ATTACK_RANGE = 15;
+    private static final int BLOCK_RANGE = 10;
+    public static final int MIN_BLOCK = 8;
+
+    public DemonKing() {
+        super(DEFAULT_DEMON_KING_NAME, DEFAULT_HEALTH);
+        changeAttackDie(new RandomDie(ATTACK_RANGE));
+        changeBlockDie(new RandomDie(BLOCK_RANGE));
+    }
 
     public DemonKing(String enemyName, int healthPoints){ super(enemyName, healthPoints); }
 
     // Skeleton -- fights with bow, blocks often.
     public void decideIntent() {
-        int roll = rand.nextInt(100);
+        int roll = intentDie.roll();
         if (roll < 50) { this.currentIntent = IntentType.ATTACK;}
         else { this.currentIntent = IntentType.DEFEND; }
         notifications.add(getName() + " prepares to " + currentIntent + "!");
@@ -23,7 +33,7 @@ public class DemonKing extends Enemy {
 
     public void executeIntent(Slayer slayer) {
         if (currentIntent == IntentType.ATTACK) {
-            int damage = rand.nextInt(16);
+            int damage = attackDie.roll();
 
             if (damage == 0) {
                 notifications.add(getName() + " misses! The ground trembles, but you are safe.");
@@ -35,7 +45,7 @@ public class DemonKing extends Enemy {
             slayer.takeDamage(damage);
 
         } else if (currentIntent == IntentType.DEFEND) {
-            int block = rand.nextInt(11) + 10;
+            int block = blockDie.roll() + MIN_BLOCK;
             notifications.add(getName() + " summons a dark barrier! Blocked for *" + block + "* damage!");
             this.gainBlock(block);
         }
