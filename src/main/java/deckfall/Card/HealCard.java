@@ -1,5 +1,7 @@
 package deckfall.Card;
 
+import deckfall.Entity.Entity;
+
 public abstract class HealCard extends Card {
     private int healthHealed;
 
@@ -10,5 +12,10 @@ public abstract class HealCard extends Card {
 
     public int getHealthHealed() {
         return healthHealed;
+    }
+
+    @Override
+    public void play(Entity user, Entity target) {
+        target.gainHealth(healthHealed);
     }
 }
