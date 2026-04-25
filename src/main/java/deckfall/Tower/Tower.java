@@ -4,22 +4,32 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Tower {
-    LinkedList<Level> floors;
+    LinkedList<Level> levels;
+    private int totalLevels;
 
-    public Tower() { this.floors = new LinkedList<>(); }
+    public Tower() {
+        this.levels = new LinkedList<>();
+    }
 
     public Tower(LinkedList<Level> floors) {
-        this.floors = floors;
+        this.levels = floors;
+        this.totalLevels = floors.size();
     }
 
     public boolean isCleared(){
-        return floors.isEmpty();
+        return levels.isEmpty();
+    }
+
+    public Level getCurrentLevel() { return this.levels.getFirst(); }
+
+    public int getTotalLevels() {
+        return this.totalLevels;
     }
 
     public Level getNextLevel() {
-        if (floors.isEmpty()) {
+        if (levels.isEmpty()) {
             return null;
         }
-        return floors.pop();
+        return levels.pop();
     }
 }
