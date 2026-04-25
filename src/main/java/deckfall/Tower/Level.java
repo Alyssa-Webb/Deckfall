@@ -5,6 +5,7 @@ import java.util.LinkedList;
 public class Level {
     LinkedList<Battle> battles;
     private int totalBattles;
+    private Battle currentBattle;
 
     public Level(LinkedList<Battle> battles) {
         this.battles = battles;

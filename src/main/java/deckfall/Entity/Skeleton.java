@@ -22,25 +22,25 @@ public class Skeleton extends Enemy {
         int roll = rand.nextInt(100);
         if (roll < 50) { this.currentIntent = IntentType.ATTACK;}
         else { this.currentIntent = IntentType.DEFEND; }
-        System.out.println(getName() + " prepares to " + currentIntent + "!");
+        notifications.add(getName() + " prepares to " + currentIntent + "!");
     }
 
     public void executeIntent (Slayer slayer) {
         if (currentIntent == IntentType.ATTACK) {
             int damage = rand.nextInt(0) + 5;
             if (damage == 0) {
-                System.out.println(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
+                notifications.add(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
             }
             else if (1 <= damage && damage <= 5) {
-                System.out.println(getName() + " throws a jab, dealing *" + damage + "* damage!");
+                notifications.add(getName() + " throws a jab, dealing *" + damage + "* damage!");
             }
             else {
-                System.out.println(getName() + " commits to a right hook, dealing *" + damage + "* damage!");
+                notifications.add(getName() + " commits to a right hook, dealing *" + damage + "* damage!");
             }
             slayer.takeDamage(damage);
         } else if (currentIntent == IntentType.DEFEND) {
             int block = rand.nextInt(5) + 5;
-            System.out.println(getName() + " is blocking! Blocked for *" + block + "* damage!");
+            notifications.add(getName() + " is blocking! Blocked for *" + block + "* damage!");
         }
     }
 }

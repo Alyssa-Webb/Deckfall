@@ -18,18 +18,18 @@ public class Goblin extends Enemy {
     // Goblin -- Only fights
     public void decideIntent () {
         this.currentIntent = IntentType.ATTACK;
-        System.out.println(getName() + " prepares to " + currentIntent + "!");
+        notifications.add(getName() + " prepares to " + currentIntent + "!");
     }
 
     public void executeIntent (Slayer slayer) {
         if (currentIntent == IntentType.ATTACK) {
             int damage = rand.nextInt(11);
             if (damage == 0) {
-                System.out.println(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
+                notifications.add(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
             } else if (1 <= damage && damage <= 5) {
-                System.out.println(getName() + " pokes you with its wrench, dealing *" + damage + "* damage!");
+                notifications.add(getName() + " pokes you with its wrench, dealing *" + damage + "* damage!");
             } else {
-                System.out.println(getName() + " swings their wrench, dealing *" + damage + "* damage with the hook of the wrench!");
+                notifications.add(getName() + " swings their wrench, dealing *" + damage + "* damage with the hook of the wrench!");
             }
             slayer.takeDamage(damage);
         }

@@ -16,6 +16,8 @@ public abstract class Entity {
     protected List<Card> hand = new ArrayList<>();
     protected List<Card> discardPile = new ArrayList<>();
 
+    protected List<String> notifications = new ArrayList<>();
+
     protected static final List<Card> DEFAULT_CARD_DECK = List.of(
             new SlashCard("Simple Slash", 1, "Deal 2 points of Slash damage to one enemy", 2),
             new SlashCard("Simple Slash", 1, "Deal 2 points of Slash damage to one enemy", 2),
@@ -33,6 +35,9 @@ public abstract class Entity {
     // Entity Methods
     public void takeDamage(int damageTaken) {
         int damageThatHitsHP = Math.max(0, damageTaken - this.block);
+
+        notifications.add(this.name + " lost " + damageThatHitsHP + " HP!");
+
         this.block = Math.max(0, this.block - damageTaken);
         this.healthPoints = Math.max(0, this.healthPoints - damageThatHitsHP);
     }
@@ -76,10 +81,13 @@ public abstract class Entity {
     public int getMaxHP()   { return maxHealthPoints; }
     public List<Card> getHand()   { return hand; }
     public int getBlock()     { return block; }
+    public List<String> getNotifications() {
+        List<String> retNotifications = notifications;
+        notifications = new ArrayList<>();
+        return retNotifications;
+    }
 
     public String evalMove(Card selectedCard, Entity target) {
-        //TODO: eval whether the card is in the entity's hand, whether they have enough energy/mana? to use it,
-        // and whether the selected target is valid for the type of card selected. If any are false, return a string explaining that
         return "Cannot play cards rn. Try passing instead.";
     }
 
@@ -89,5 +97,9 @@ public abstract class Entity {
     @Override
     public String toString() {
         return getName() + "(" + getHP() + ")";
+    }
+
+    public boolean isSlayer() {
+        return false;
     }
 }

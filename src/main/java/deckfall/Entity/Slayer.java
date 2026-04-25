@@ -27,7 +27,22 @@ public class Slayer extends Entity {
         addToDeck(DEFAULT_CARD_DECK);
     }
 
-    // Start and End Turn Methods
+    @Override
+    public String evalMove(Card selectedCard, Entity target) {
+        if(selectedCard.getEnergyCost() > energy){
+            return "You don't have enough mana. This card requires " + selectedCard.getEnergyCost() + " mana.";
+        }
+
+        //TODO: give cards a target type (slayer-only, any, and enemy-only). For now they can do whatever to whomever lol
+
+        return "";
+    }
+
+    @Override
+    public boolean isSlayer() {
+        return true;
+    }
+// Start and End Turn Methods
 
     public void startTurn() {
         this.energy = maxEnergy;
@@ -41,14 +56,13 @@ public class Slayer extends Entity {
 
 
     // Card Methods
-    // TODO print statements?
     public boolean playCard(Card card, Entity enemy) {
         if (!hand.contains(card)) {
-            System.out.println("Card not in hand.");
+            notifications.add("Card not in hand");
             return false;
         }
         if (energy < card.getEnergyCost()) {
-            System.out.println("Not enough energy to play " + card.getName());
+            notifications.add("Not enough energy to play " + card.getName());
             return false;
         }
 

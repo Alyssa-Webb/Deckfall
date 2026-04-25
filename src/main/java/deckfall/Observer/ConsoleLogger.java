@@ -35,6 +35,10 @@ public class ConsoleLogger implements GameEventObserver {
 
     @Override
     public void requestUserInput(RelevantGameData gameData) {
+        for(String notif : gameData.getNotifications()) {
+            System.out.println(notif);
+        }
+
         System.out.println("Requesting user input");
 
         boolean successfullyMadeMove = false;
@@ -290,17 +294,50 @@ public class ConsoleLogger implements GameEventObserver {
     }
 
     // Win Condition Events
+    //TODO: write an actually satisfying ending. Maybe give the player the option to skip all of it though lol
     public void onVictory() {
         System.out.println("You win!");
     }
 
     public void onDefeat() {
-
+        System.out.println(
+                """
+                Tragically, you meet your end. The Tower held up to its reputation -- you wonder, briefly, whether there was anything
+                 you could've done to prevent this.\
+                Could you have brought more supplies? Worn different armor? Refused to go on this quest at all?\
+                But it's pointless. Your last thought as you slip into the great unknown, is the fate of the poor villagers,
+                 who's fates will never be known'.\
+                (sorry, no option to try again. Well, except for restarting the program of course.)
+                """);
     }
 
     @Override
     public void startGame() {
-        System.out.println("Game started.");
+        System.out.println(
+                """
+                You are the Slayer; a powerful and accomplished being heralded across the lands.\
+                
+                Today, you're tackling your biggest challenge yet: the Tower.\
+                
+                What's inside is completely unknown, but none who step inside are never seen again.\
+                
+                And yet, reports of missing persons in the surrounding areas have skyrocketed since its sudden appearance a few months ago.\
+                
+                At their wits end, the desperate people came to you, seeking aid.\
+                
+                You push open the large doors, and step inside...\
+                
+                (press enter to continue)
+                """);
+        scanner.nextLine();
+        displayFinishedListener.ActionPerformed(emptyEntityAction);
+    }
+
+    @Override
+    public void update(RelevantGameData relevantGameData) {
+        for(String notif : relevantGameData.getNotifications()) {
+            System.out.println(notif);
+        }
         displayFinishedListener.ActionPerformed(emptyEntityAction);
     }
 

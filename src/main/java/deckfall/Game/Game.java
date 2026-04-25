@@ -3,7 +3,6 @@ package deckfall.Game;
 import deckfall.DataClasses.*;
 import deckfall.Entity.Enemy;
 import deckfall.Entity.Entity;
-import deckfall.Entity.Goblin;
 import deckfall.Entity.Slayer;
 import deckfall.Tower.Battle;
 import deckfall.Tower.Level;
@@ -18,17 +17,22 @@ public class Game {
     private Level currentLevel;
     private Battle currentBattle;
     private List<Entity> entities;
-    //storing the 'player' allows me to add them to the Battle when it starts, rather than having to *build* each Battle with the player
     private final Slayer slayer;
     private Entity currentTurnHolder;
     private int numTurns = 0;
-    private final LinkedList<String> events = new LinkedList<>();
+    //private final LinkedList<String> events = new LinkedList<>();
 
     public Game(Slayer playerCharacter, Tower tower) {
         this.slayer = playerCharacter;
         this.tower = tower;
-        //remove this later
-        currentTurnHolder = slayer;
+    }
+
+    //a little risky in the event there IS no next battle or level, but that's. fine.
+    public void startGame() {
+        currentLevel = tower.getNextLevel();
+        currentBattle = currentLevel.getNextBattle();
+        currentBattle.addPlayerCharacter(slayer, 0);
+        currentTurnHolder = currentBattle.getNextTurn();
     }
 
     // if it's valid, then it returns an empty string. Otherwise, it returns the reason why the move is invalid.
@@ -49,10 +53,10 @@ public class Game {
     }
 
     public GameState nextGameState(){
-        //this will be in charge of notifying when a battle and a floor is beaten, alongside damage and death
+        /*//this will be in charge of notifying when a battle and a floor is beaten, alongside damage and death
         if(!events.isEmpty()) {
             return GameState.NOTIFYING_OF_SIDE_EFFECTS;
-        }
+        }*/
 
         if(isOver()){
             if(slayerWon()){
@@ -62,10 +66,21 @@ public class Game {
             }
         }
 
+        if(currentBattle.battleOver()) {
+            //if the tower is cleared, that should be caught by the previous Game Over check
+            if(currentLevel.levelIsCleared()) {
+                currentLevel = tower.getNextLevel();
+            }
+            currentBattle = currentLevel.getNextBattle();
+            currentBattle.addPlayerCharacter(slayer);
+        }
 
-        events.add("Events will eventually be changed to be of type SideEffect. I think?");
-        //TODO: make non-trivial
-        return GameState.PLAYER_TURN;
+        currentTurnHolder = currentBattle.getNextTurn();
+        if(currentTurnHolder.isSlayer()) {
+            return GameState.PLAYER_TURN;
+        } else {
+            return GameState.ENEMY_TURN;
+        }
     }
 
     private boolean slayerWon() {
@@ -73,30 +88,23 @@ public class Game {
     }
 
     public boolean isOver() {
-        numTurns += 1;
-        return numTurns == 2;
-        //return player.isAlive() || tower.isCleared();
+        return !slayer.isAlive() || tower.isCleared();
     }
 
-    public Entity getCurrentTurnHolder() {
-        return currentTurnHolder;
-    }
-
-    public SideEffect getSideEffect() {
-        //TODO: make this non-trivial
-        events.pop();
-        return new SideEffect(SideEffectType.ENEMY_DEATH, "Enemy");
+    public List<String> getNotifications() {
+        List<String> notifications = new ArrayList<>();
+        for(Entity entity : currentBattle) {
+            notifications.addAll(entity.getNotifications());
+        }
+        return notifications;
     }
 
     public RelevantGameData getRelevantGameData() {
-        List<Entity> enemies = List.of(new Goblin(), new Goblin());
-        // Pass a string of notifications i.e. "pass" "use card" etc.
-        List<String> notifications = new ArrayList<>(events);
+        //to make this more like the Observer pattern, we could switch to Events. But since we're using the Iterator pattern
+        // as well now I'm not sure it's necessary to have Observer specifically
+        List<String> notifications = getNotifications();
 
-        currentLevel = tower.getCurrentLevel();
-        currentBattle = currentLevel.getCurrentBattle();
-
-        events.clear();
+        List<Entity> enemies = currentBattle.getActiveEnemies();
 
         return new RelevantGameData(
                 slayer.getHand(),
@@ -115,5 +123,10 @@ public class Game {
     }
     public void endSlayerTurn() {
         slayer.endTurn();
+    }
+
+    public void playEnemyTurn() {
+        ((Enemy) currentTurnHolder).decideIntent();
+        ((Enemy) currentTurnHolder).executeIntent(slayer);
     }
 }

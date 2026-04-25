@@ -119,4 +119,9 @@ public class GameEventAdapter implements GameEventObserver {
     public void startGame() {
 
     }
+
+    @Override
+    public void update(RelevantGameData relevantGameData) {
+
+    }
 }

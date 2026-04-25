@@ -256,6 +256,11 @@ public class SwingGameView extends JFrame implements GameEventObserver {
         }
     }
 
+    @Override
+    public void update(RelevantGameData relevantGameData) {
+
+    }
+
     // =============================
     // Unused Observer Methods
     // =============================

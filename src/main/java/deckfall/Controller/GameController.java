@@ -11,7 +11,6 @@ import deckfall.Observer.GameEventObserver;
 public class GameController {
     private Game game;
     private GameState gameState = GameState.GAME_START;
-    // I'm concerned about a race condition when it comes to having multiple 'Observers' since they're also gonna need to manage input (ugh)
     private GameEventObserver view;
 
     public GameController(Game game, GameEventObserver view) {
@@ -22,17 +21,20 @@ public class GameController {
     }
 
     public void gameStart() {
+        game.startGame();
         view.startGame();
     }
 
     private void next() {
         //do different things depending on the current state
         switch (gameState){
-            case NOTIFYING_OF_SIDE_EFFECTS:
-                SideEffect sideEffect = game.getSideEffect();
-                evalSideEffect(sideEffect);
-                break;
+            /*case NOTIFYING_OF_SIDE_EFFECTS:
+                //SideEffect sideEffect = game.getSideEffect();
+                //evalSideEffect(sideEffect);
+                break;*/
             case ENEMY_TURN:
+                game.playEnemyTurn();
+                view.update(game.getRelevantGameData());
                 break;
             case PLAYER_TURN:
                 //view.requestUserInput(game.getCurrentTurnHolder().getHand());

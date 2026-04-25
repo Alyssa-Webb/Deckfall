@@ -18,7 +18,7 @@ public class DemonKing extends Enemy {
         int roll = rand.nextInt(100);
         if (roll < 50) { this.currentIntent = IntentType.ATTACK;}
         else { this.currentIntent = IntentType.DEFEND; }
-        System.out.println(getName() + " prepares to " + currentIntent + "!");
+        notifications.add(getName() + " prepares to " + currentIntent + "!");
     }
 
     public void executeIntent(Slayer slayer) {
@@ -26,17 +26,17 @@ public class DemonKing extends Enemy {
             int damage = rand.nextInt(16);
 
             if (damage == 0) {
-                System.out.println(getName() + " misses! The ground trembles, but you are safe.");
+                notifications.add(getName() + " misses! The ground trembles, but you are safe.");
             } else if (damage <= 10) {
-                System.out.println(getName() + " strikes with dark energy, dealing *" + damage + "* damage!");
+                notifications.add(getName() + " strikes with dark energy, dealing *" + damage + "* damage!");
             } else {
-                System.out.println(getName() + " unleashes a HELLISH SMITE, dealing *" + damage + "* damage!");
+                notifications.add(getName() + " unleashes a HELLISH SMITE, dealing *" + damage + "* damage!");
             }
             slayer.takeDamage(damage);
 
         } else if (currentIntent == IntentType.DEFEND) {
             int block = rand.nextInt(11) + 10;
-            System.out.println(getName() + " summons a dark barrier! Blocked for *" + block + "* damage!");
+            notifications.add(getName() + " summons a dark barrier! Blocked for *" + block + "* damage!");
             this.gainBlock(block);
         }
     }
