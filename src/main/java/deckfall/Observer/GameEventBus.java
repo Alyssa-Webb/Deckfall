@@ -71,6 +71,9 @@ public class GameEventBus {
         for (GameEventObserver observer : observers) observer.onEntityHeal(entityName, blocked);
     }
 
+    public void notifyNotEnoughEnergy(String entityName, Card cardName) {
+        for (GameEventObserver observer : observers) observer.onNotEnoughEnergy(entityName, cardName);
+    }
 
     // Card Events
     public void notifyCardDrawn(Card card) {

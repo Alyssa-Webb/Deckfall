@@ -52,6 +52,7 @@ public interface GameEventObserver {
 
     void onEntityDamaged(String entityName, int damageReceived);
 
+    void onNotEnoughEnergy(String entityName, Card cardName);
 
     // Card and Deck Events
     void onCardDrawn(Card card);

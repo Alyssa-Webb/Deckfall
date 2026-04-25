@@ -271,6 +271,12 @@ public class ConsoleLogger implements GameEventObserver {
         System.out.println(entityName + " took " + damageReceived + " damage!");
     }
 
+    @Override
+    public void onNotEnoughEnergy(String entityName, Card card) {
+        System.out.println(entityName + " does not have enough energy to play " + card.getName() + "!");
+    }
+
+
     // Card and Deck Events
     @Override
     public void onCardDrawn(Card card) {
