@@ -9,8 +9,6 @@ public class Slayer extends Entity {
     private static final int DEFAULT_DRAW_COUNT = 5;
     private static final int DEFAULT_MAX_ENERGY = 3;
     private static final String DEFAULT_SLAYER_DESCRIPTION = "You are the Slayer. You have been summoned by your realm to seek understanding behind the origin of missing persons.";
-
-
     private final int maxEnergy;
     private int energy;
 
@@ -35,8 +33,6 @@ public class Slayer extends Entity {
         if(selectedCard.getEnergyCost() > energy){
             return "You don't have enough mana. This card requires " + selectedCard.getEnergyCost() + " mana.";
         }
-
-        //TODO: give cards a target type (slayer-only, any, and enemy-only). For now they can do whatever to whomever lol
 
         return "";
     }
