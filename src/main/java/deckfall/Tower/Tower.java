@@ -6,6 +6,7 @@ import java.util.List;
 public class Tower {
     LinkedList<Level> levels;
     private int totalLevels;
+    private int currentLevel = 0;
 
     public Tower() {
         this.levels = new LinkedList<>();
@@ -20,7 +21,7 @@ public class Tower {
         return levels.isEmpty();
     }
 
-    public Level getCurrentLevel() { return this.levels.getFirst(); }
+    public int getCurrentLevel() { return currentLevel; }
 
     public int getTotalLevels() {
         return this.totalLevels;
@@ -30,6 +31,7 @@ public class Tower {
         if (levels.isEmpty()) {
             return null;
         }
+        currentLevel += 1;
         return levels.pop();
     }
 }
