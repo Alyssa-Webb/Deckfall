@@ -6,14 +6,30 @@ import deckfall.Entity.IntentType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameEventManager {
-    private static final List<GameEventObserver> observers = new ArrayList<>();
+public class GameEventBus {
+    private static final GameEventBus GAME_EVENT_BUS  = new GameEventBus();
+    private final List<GameEventObserver> observers = new ArrayList<>();
+    private final List<String> pendingNotifications = new ArrayList<>(); // was missing
 
-    public static void registerObserver(GameEventObserver observer) {
+
+    private GameEventBus() {}
+
+    public static GameEventBus getGameEventBus() { return GAME_EVENT_BUS; }
+
+    public void queueNotification(String message) {
+        pendingNotifications.add(message);
+    }
+    public List<String> flushNotifications() {
+        List<String> flushed = new ArrayList<>(pendingNotifications);
+        pendingNotifications.clear();
+        return flushed;
+    }
+
+    public void registerObserver(GameEventObserver observer) {
         observers.add(observer);
     }
 
-    public static void unregisterObserver(GameEventObserver observer) {
+    public void unregisterObserver(GameEventObserver observer) {
         observers.remove(observer);
     }
 
@@ -50,13 +66,18 @@ public class GameEventManager {
     }
 
     // Combat Events
-    public void notifyEntityAttack(String attacker, String target, int damage) {
-        for (GameEventObserver observer : observers) observer.onEntityAttack(attacker, target, damage);
+    public void notifyEntityDamaged(String attacker, int damage) {
+        for (GameEventObserver observer : observers) observer.onEntityDamaged(attacker, damage);
     }
 
     public void notifyEntityDefense(String entityName, int blocked) {
         for (GameEventObserver observer : observers) observer.onEntityDefense(entityName, blocked);
     }
+
+    public void notifyEntityHeal(String entityName, int blocked) {
+        for (GameEventObserver observer : observers) observer.onEntityDefense(entityName, blocked);
+    }
+
 
     // Card Events
     public void notifyCardDrawn(Card card) {
