@@ -37,8 +37,8 @@ public class ConsoleLogger implements GameEventObserver {
     }
 
     public void requestUserInput(RelevantGameData gameData) {
-        for(String notif : notifications) {
-            System.out.println(notif);
+        for(String notification : notifications) {
+            System.out.println(notification);
         }
 
         System.out.println("Requesting user input");
@@ -304,18 +304,18 @@ public class ConsoleLogger implements GameEventObserver {
 
     @Override
     public void onDemonKingFloor() {
-        notifications.add("A dark presence fills the room... The Demon King awaits.");
+        System.out.println("A dark presence fills the room... The Demon King awaits.");
     }
 
     // Win Condition Events
     @Override
     public void onVictory() {
-        notifications.add("You win!");
+        System.out.println("You win!");
     }
 
     @Override
     public void onDefeat() {
-        notifications.add("""
+        System.out.println("""
                 Tragically, you meet your end. The Tower held up to its reputation -- you wonder, briefly, whether there was anything
                 you could've done to prevent this. Could you have brought more supplies? Worn different armor? Refused to go on this quest at all?
                 But it's pointless. Your last thought as you slip into the great unknown, is the fate of the poor villagers,
@@ -326,7 +326,7 @@ public class ConsoleLogger implements GameEventObserver {
 
     @Override
     public void startGame() {
-        notifications.add("""
+        System.out.println("""
                 You are the Slayer; a powerful and accomplished being heralded across the lands.
                 
                 Today, you're tackling your biggest challenge yet: the Tower.
