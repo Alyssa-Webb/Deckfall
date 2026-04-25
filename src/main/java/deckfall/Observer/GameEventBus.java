@@ -22,9 +22,11 @@ public class GameEventBus {
     }
 
     public List<String> getEvents(){
-        List<String> retList = EVENTS;
+        return EVENTS;
+    }
+
+    public void clearEvents(){
         EVENTS = new ArrayList<>();
-        return retList;
     }
 
     public void registerObserver(GameEventObserver observer) {

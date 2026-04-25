@@ -34,8 +34,7 @@ public class Skeleton extends Enemy {
         int roll = intentDie.roll();
         if (roll < 50) { this.currentIntent = IntentType.ATTACK;}
         else { this.currentIntent = IntentType.DEFEND; }
-        GameEventBus.getGameEventBus().notifyDeckShuffled();
-        //GameEventBus.getGameEventBus().notifyDecideIntent(getName(), currentIntent);
+        GameEventBus.getGameEventBus().notifyDecideIntent(getName(), currentIntent);
     }
 
     public void executeIntent (Slayer slayer) {

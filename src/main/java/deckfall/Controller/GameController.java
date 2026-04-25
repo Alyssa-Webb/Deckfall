@@ -94,18 +94,17 @@ public class GameController {
             String isMoveValid = game.evalValidityOfMove(e);
             if(!isMoveValid.isEmpty()){
                 view.onInvalidMoveSelected(isMoveValid);
-            }
-            /*Action action = () -> {
-                System.out.println("A");
-            };*/
-            boolean res = game.makeMove(e);
-            if(!res){
-                view.onInvalidMoveSelected("The move failed. Please try again.");
-                view.requestUserInput(game.getRelevantGameData());
             } else {
-                game.endSlayerTurn();
-                gameState = game.nextGameState();
-                next();
+                GameEventBus.getGameEventBus().clearEvents();
+                boolean res = game.makeMove(e);
+                if (!res) {
+                    view.onInvalidMoveSelected("The move failed. Please try again.");
+                    view.requestUserInput(game.getRelevantGameData());
+                } else {
+                    game.endSlayerTurn();
+                    gameState = game.nextGameState();
+                    next();
+                }
             }
 
             // send the ActionEvent (or wtv I Really end up goin with) to game.play(ActionEvent)
