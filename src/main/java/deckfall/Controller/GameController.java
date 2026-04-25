@@ -73,7 +73,7 @@ public class GameController {
             case null:
                 throw new RuntimeException("Something is wrong with the way game changes states");
             default:
-                view.defaultNotif(sideEffect.gameData);
+                view.defaultNotification(sideEffect.gameData);
         }
     }
 
