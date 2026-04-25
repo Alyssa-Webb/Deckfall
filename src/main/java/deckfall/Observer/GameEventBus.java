@@ -9,21 +9,10 @@ import java.util.List;
 public class GameEventBus {
     private static final GameEventBus GAME_EVENT_BUS  = new GameEventBus();
     private final List<GameEventObserver> observers = new ArrayList<>();
-    private final List<String> pendingNotifications = new ArrayList<>(); // was missing
-
 
     private GameEventBus() {}
 
     public static GameEventBus getGameEventBus() { return GAME_EVENT_BUS; }
-
-    public void queueNotification(String message) {
-        pendingNotifications.add(message);
-    }
-    public List<String> flushNotifications() {
-        List<String> flushed = new ArrayList<>(pendingNotifications);
-        pendingNotifications.clear();
-        return flushed;
-    }
 
     public void registerObserver(GameEventObserver observer) {
         observers.add(observer);
@@ -31,6 +20,10 @@ public class GameEventBus {
 
     public void unregisterObserver(GameEventObserver observer) {
         observers.remove(observer);
+    }
+
+    public void notifyDefaultNotification(String message) {
+        for (GameEventObserver observer : observers) observer.defaultNotification(message);
     }
 
     // TODO
@@ -75,7 +68,7 @@ public class GameEventBus {
     }
 
     public void notifyEntityHeal(String entityName, int blocked) {
-        for (GameEventObserver observer : observers) observer.onEntityDefense(entityName, blocked);
+        for (GameEventObserver observer : observers) observer.onEntityHeal(entityName, blocked);
     }
 
 
