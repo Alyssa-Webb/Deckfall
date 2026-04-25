@@ -23,13 +23,13 @@ public class Goblin extends Enemy {
     // Goblin -- Only fights
     public void decideIntent () {
         this.currentIntent = IntentType.ATTACK;
-        GameEventBus.getGameEventBus().notifyDecideIntent(getName(), currentIntent);
+        GameEventBus.getGameEventBus().notifyDecideIntent(getName(), this.currentIntent);
     }
 
     public String getDescription() { return DEFAULT_GOBLIN_DESCRIPTION; }
 
     public void executeIntent (Slayer slayer) {
-        if (currentIntent == IntentType.ATTACK) {
+        if (this.currentIntent == IntentType.ATTACK) {
             int damage = attackDie.roll();
             if (damage == 0) {
                 GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " misses! Dealt *" + damage + "* damage... ouch.");

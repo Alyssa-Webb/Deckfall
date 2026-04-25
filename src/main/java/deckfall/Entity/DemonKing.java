@@ -1,10 +1,7 @@
 package deckfall.Entity;
 
-import deckfall.Die.Die;
 import deckfall.Die.RandomDie;
 import deckfall.Observer.GameEventBus;
-
-import java.util.Random;
 
 public class DemonKing extends Enemy {
     private static final String DEFAULT_DEMON_KING_NAME = "Demon King";
@@ -37,7 +34,7 @@ public class DemonKing extends Enemy {
     }
 
     public void executeIntent(Slayer slayer) {
-        if (currentIntent == IntentType.ATTACK) {
+        if (this.currentIntent == IntentType.ATTACK) {
             int damage = attackDie.roll();
 
             if (damage == 0) {
@@ -49,9 +46,9 @@ public class DemonKing extends Enemy {
             }
             slayer.takeDamage(damage);
 
-        } else if (currentIntent == IntentType.DEFEND) {
+        } else if (this.currentIntent == IntentType.DEFEND) {
             int block = blockDie.roll() + MIN_BLOCK;
-            GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " summons a dark barrier! Blocked for *" + block + "* damage!");
+            GameEventBus.getGameEventBus().notifyEntityDefense(this.getName(), block);
             this.gainBlock(block);
         }
     }

@@ -28,11 +28,11 @@ public class Troll extends Enemy {
         int roll = intentDie.roll();
         if (roll < 80) { this.currentIntent = IntentType.ATTACK;}
         else { this.currentIntent = IntentType.DEFEND; }
-        GameEventBus.getGameEventBus().notifyDecideIntent(getName(), currentIntent);
+        GameEventBus.getGameEventBus().notifyDecideIntent(getName(), this.currentIntent);
     }
 
     public void executeIntent (Slayer slayer) {
-        if (currentIntent == IntentType.ATTACK) {
+        if (this.currentIntent == IntentType.ATTACK) {
             int damage = attackDie.roll();
             if (damage == 0) {
                 GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
@@ -44,9 +44,9 @@ public class Troll extends Enemy {
                 GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " commits to a right hook, dealing *" + damage + "* damage!");
             }
             slayer.takeDamage(damage);
-        } else if (currentIntent == IntentType.DEFEND) {
+        } else if (this.currentIntent == IntentType.DEFEND) {
             int block = blockDie.roll() + MIN_BLOCK;
-            GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " is blocking! Blocked for *" + block + "* damage!");
+            GameEventBus.getGameEventBus().notifyEntityDefense(this.getName(), block);
             this.gainBlock(block);
         }
     }
