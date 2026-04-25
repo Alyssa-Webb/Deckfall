@@ -9,6 +9,7 @@ public class DemonKing extends Enemy {
     private static final String DEFAULT_DEMON_KING_NAME = "Demon King";
     private static final int DEFAULT_HEALTH = 100;
     private IntentType currentIntent;
+    private static final String DEFAULT_DEMON_KING_DESCRIPTION = "Demon King. Ruler of this very Tower, preparing his horde of minions to be unleashed unto the realm to do his very bidding. Beware the dark energy he uses, some say they can hear the screams from the souls trapped within.";
 
     //private static final int INTENT_RANGE = 100;
     private static final int ATTACK_RANGE = 15;
@@ -21,7 +22,10 @@ public class DemonKing extends Enemy {
         changeBlockDie(new RandomDie(BLOCK_RANGE));
     }
 
+
     public DemonKing(String enemyName, int healthPoints){ super(enemyName, healthPoints); }
+
+    public String getDescription() { return DEFAULT_DEMON_KING_DESCRIPTION; }
 
     // Skeleton -- fights with bow, blocks often.
     public void decideIntent() {
