@@ -16,11 +16,8 @@ public class Game {
     private final Tower tower;
     private Level currentLevel;
     private Battle currentBattle;
-    private List<Entity> entities;
     private final Slayer slayer;
     private Entity currentTurnHolder;
-    private int numTurns = 0;
-    //private final LinkedList<String> events = new LinkedList<>();
 
     public Game(Slayer playerCharacter, Tower tower) {
         this.slayer = playerCharacter;
