@@ -2,6 +2,7 @@ package deckfall.Observer;
 
 import deckfall.Card.Card;
 import deckfall.DataClasses.RelevantGameData;
+import deckfall.Entity.Enemy;
 import deckfall.Entity.IntentType;
 import deckfall.Controller.Listener;
 import deckfall.DataClasses.EntityAction;
@@ -23,9 +24,11 @@ public class ConsoleLogger implements GameEventObserver {
 
     private final List<String> userMoves = List.of(
             "Get card description",
+            "Get enemy description",
             "Play card",
             "Pass",
-            "Do a lil jig"
+            "Do a lil jig",
+            "Exit game"
     );
 
     private Integer tryParsingInt(String userInput) {
@@ -68,16 +71,21 @@ public class ConsoleLogger implements GameEventObserver {
                     handleGetCardDescription(gameData.getCards());
                     break;
                 case 2:
-                    successfullyMadeMove = handlePlayCard(gameData.getCards(), gameData.getEnemies(), gameData.getSlayer());
+                    handleGetEnemyDescription(gameData.getEnemies());
                     break;
                 case 3:
+                    successfullyMadeMove = handlePlayCard(gameData.getCards(), gameData.getEnemies(), gameData.getSlayer());
+                    break;
+                case 4:
                     successfullyMadeMove = true;
                     System.out.println("You passed your turn.");
                     userInputListener.ActionPerformed(new EntityAction().setAction_enum(MoveTypes.PASS));
                     break;
-                case 4:
+                case 5:
                     System.out.println("You did a lil jig!\nNothing happened.");
                     break;
+                case 6:
+                    System.exit(0);
             }
         }
     }
@@ -160,6 +168,22 @@ public class ConsoleLogger implements GameEventObserver {
             }
         }
         System.out.println(selectedCard + "\n");
+    }
+
+    private void handleGetEnemyDescription(List<Entity> enemies) {
+        Entity selectedTarget = null;
+        while (selectedTarget == null) {
+            int userSelection = userSelectTargetNumber(enemies) - 1;
+            if (userSelection >= enemies.size() + 1) {
+                return;
+            } else if (userSelection == enemies.size()) {
+                System.out.println("It's you!");
+                return;
+            } else {
+                System.out.println(enemies.get(userSelection).getDescription());
+                return;
+            }
+        }
     }
 
     private void handleGetEnemyDescription(List<Entity> enemies, Entity slayer) {
