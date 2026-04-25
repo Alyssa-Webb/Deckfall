@@ -8,6 +8,7 @@ import deckfall.DataClasses.EntityAction;
 import deckfall.Entity.Entity;
 import deckfall.Game.MoveTypes;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import java.util.List;
@@ -17,8 +18,10 @@ public class ConsoleLogger implements GameEventObserver {
     private final EntityAction emptyEntityAction = new EntityAction();
     private Listener displayFinishedListener;
     private Listener userInputListener;
+    private List<String> notifications = new ArrayList<>();
 
-    private List<String> userMoves = List.of(
+
+    private final List<String> userMoves = List.of(
             "Get card description",
             "Play card",
             "Pass",
@@ -34,7 +37,7 @@ public class ConsoleLogger implements GameEventObserver {
     }
 
     public void requestUserInput(RelevantGameData gameData) {
-        for(String notif : gameData.getNotifications()) {
+        for(String notif : notifications) {
             System.out.println(notif);
         }
 
@@ -186,133 +189,133 @@ public class ConsoleLogger implements GameEventObserver {
 
     @Override
     public void defaultNotification(String message) {
-        System.out.println(message);
+        notifications.add(message);
     }
 
     // Floor Events
     @Override
     public void onFloorEntry(int floor) {
-        System.out.println("You enter floor " + floor + " of the Tower...");
+        notifications.add("You enter floor " + floor + " of the Tower...");
     }
 
     @Override
     public void onFloorClear(int floor) {
-        System.out.println("Floor " + floor + " cleared!");
+        notifications.add("Floor " + floor + " cleared!");
     }
 
     // Battle Events
     @Override
     public void onBattleEntry() {
-        System.out.println("A new battle begins!");
+        notifications.add("A new battle begins!");
     }
 
     @Override
     public void onBattleChange(List<Entity> currentLivingPlayers, List<Entity> currentLivingFoes) {
-        System.out.println(currentLivingFoes.size() + " enemy(s) remain.");
+        notifications.add(currentLivingFoes.size() + " enemy(s) remain.");
     }
 
     @Override
     public void onBattleWin() {
-        System.out.println("You won the battle!");
+        notifications.add("You won the battle!");
     }
 
     @Override
     public void onInvalidMoveSelected(String message) {
-        System.out.println("Invalid move: " + message);
+        notifications.add("Invalid move: " + message);
     }
 
     // Turn Events
     @Override
     public void onTurnStart(String entityName) {
-        System.out.println("=-=- " + entityName + "'s turn -=-=");
+        notifications.add("=-=- " + entityName + "'s turn -=-=");
     }
 
     @Override
     public void onTurnEnd(String entityName) {
-        System.out.println(entityName + "'s turn ends.");
+        notifications.add(entityName + "'s turn ends.");
     }
 
     @Override
     public void onTurnPass(String entityName) {
-        System.out.println(entityName + " passes their turn.");
+        notifications.add(entityName + " passes their turn.");
     }
 
     // Death Events
     @Override
     public void onSlayerDefeat() {
-        System.out.println("The Slayer has fallen...");
+        notifications.add("The Slayer has fallen...");
         displayFinishedListener.ActionPerformed(emptyEntityAction);
     }
 
     @Override
     public void onEnemyDefeat(String enemyName) {
-        System.out.println(enemyName + " has been defeated!");
+        notifications.add(enemyName + " has been defeated!");
         displayFinishedListener.ActionPerformed(emptyEntityAction);
     }
 
     // Combat Events
     @Override
     public void onEntityAttack(String attackerName, String targetName, int damageDealt) {
-        System.out.println(attackerName + " attacks " + targetName + " for " + damageDealt + " damage!");
+        notifications.add(attackerName + " attacks " + targetName + " for " + damageDealt + " damage!");
     }
 
     @Override
     public void onEntityDefense(String entityName, int damageBlocked) {
-        System.out.println(entityName + " gained " + damageBlocked + " block!");
+        notifications.add(entityName + " gained " + damageBlocked + " block!");
     }
 
     @Override
     public void onEntityHeal(String entityName, int damageHealed) {
-        System.out.println(entityName + " restored " + damageHealed + " HP!");
+        notifications.add(entityName + " restored " + damageHealed + " HP!");
     }
 
     @Override
     public void onEntityDamaged(String entityName, int damageReceived) {
-        System.out.println(entityName + " took " + damageReceived + " damage!");
+        notifications.add(entityName + " took " + damageReceived + " damage!");
     }
 
     @Override
     public void onNotEnoughEnergy(String entityName, Card card) {
-        System.out.println(entityName + " does not have enough energy to play " + card.getName() + "!");
+        notifications.add(entityName + " does not have enough energy to play " + card.getName() + "!");
     }
 
 
     // Card and Deck Events
     @Override
     public void onCardDrawn(Card card) {
-        System.out.println("Drew: " + card.getSimpleString());
+        notifications.add("Drew: " + card.getSimpleString());
     }
 
     @Override
     public void onCardPlayed(Card card) {
-        System.out.println("Played: " + card.getSimpleString());
+        notifications.add("Played: " + card.getSimpleString());
     }
 
     @Override
     public void onDeckShuffled() {
-        System.out.println("Deck reshuffled from discard pile.");
+        notifications.add("Deck reshuffled from discard pile.");
     }
 
     // Enemy Events
     @Override
     public void onDecideIntent(String enemyName, IntentType intent) {
-        System.out.println(enemyName + " prepares to " + intent + "!");
+        notifications.add(enemyName + " prepares to " + intent + "!");
     }
 
     @Override
     public void onDemonKingFloor() {
-        System.out.println("A dark presence fills the room... The Demon King awaits.");
+        notifications.add("A dark presence fills the room... The Demon King awaits.");
     }
 
     // Win Condition Events
     @Override
     public void onVictory() {
-        System.out.println("You win!");
+        notifications.add("You win!");
     }
 
     @Override
     public void onDefeat() {
-        System.out.println("""
+        notifications.add("""
                 Tragically, you meet your end. The Tower held up to its reputation -- you wonder, briefly, whether there was anything
                 you could've done to prevent this. Could you have brought more supplies? Worn different armor? Refused to go on this quest at all?
                 But it's pointless. Your last thought as you slip into the great unknown, is the fate of the poor villagers,
@@ -323,7 +326,7 @@ public class ConsoleLogger implements GameEventObserver {
 
     @Override
     public void startGame() {
-        System.out.println("""
+        notifications.add("""
                 You are the Slayer; a powerful and accomplished being heralded across the lands.
                 
                 Today, you're tackling your biggest challenge yet: the Tower.
