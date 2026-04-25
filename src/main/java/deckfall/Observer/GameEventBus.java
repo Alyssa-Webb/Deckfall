@@ -42,11 +42,6 @@ public class GameEventBus {
         //for (GameEventObserver observer : observers) observer.defaultNotification(message);
     }
 
-    // TODO
-    // IN MVC, OBSERVER WILL BE THE BRIDGE BETWEEN THE MODEL AND CONTROLLER.
-    // THIS WILL BE NECESSARY IN DISPLAYING INFORMATION TO THE CONSOLE
-    // OR TO WHATEVER GUI WE CHOOSE.
-
     // Floor Events
     public void notifyFloorEntry(int floor) {
         EVENTS.add("Entered floor " + floor);
