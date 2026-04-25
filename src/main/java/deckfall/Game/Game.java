@@ -4,6 +4,7 @@ import deckfall.DataClasses.*;
 import deckfall.Entity.Enemy;
 import deckfall.Entity.Entity;
 import deckfall.Entity.Slayer;
+import deckfall.Observer.GameEventBus;
 import deckfall.Tower.Battle;
 import deckfall.Tower.Level;
 import deckfall.Tower.Tower;
@@ -86,11 +87,12 @@ public class Game {
     }
 
     public List<String> getNotifications() {
-        List<String> notifications = new ArrayList<>();
+        return GameEventBus.getGameEventBus().getEvents();
+        /*List<String> notifications = new ArrayList<>();
         for(Entity entity : currentBattle) {
             notifications.addAll(entity.getNotifications());
         }
-        return notifications;
+        return notifications;*/
     }
 
     public RelevantGameData getRelevantGameData() {

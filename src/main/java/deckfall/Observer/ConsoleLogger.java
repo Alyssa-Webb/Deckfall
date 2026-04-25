@@ -37,7 +37,7 @@ public class ConsoleLogger implements GameEventObserver {
     }
 
     public void requestUserInput(RelevantGameData gameData) {
-        for(String notification : notifications) {
+        for(String notification : gameData.getNotifications()) {
             System.out.println(notification);
         }
 

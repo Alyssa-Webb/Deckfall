@@ -292,6 +292,11 @@ public class SwingGameView extends JFrame implements GameEventObserver {
     @Override public void onEntityDamaged(String e, int d) {}
 
     @Override
+    public void onNotEnoughEnergy(String entityName, Card cardName) {
+
+    }
+
+    @Override
     public void onDemonKingFloor() {
 
     }
