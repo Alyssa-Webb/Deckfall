@@ -12,7 +12,7 @@ public class Skeleton extends Enemy {
     private static final String DEFAULT_SKELETON_NAME = "Skeleton";
     private static final int DEFAULT_HEALTH = 10;
     private IntentType currentIntent;
-    // private static final String DEFAULT_SKELETON_DESCRIPTION = "Skeleton. Skeleton fights from a far, using a Bow and Shield. Since Skeleton is ranged, better chance at blocking."
+    private static final String DEFAULT_SKELETON_DESCRIPTION = "Skeleton. Skeleton fights from a far, using a Bow and Shield. Since Skeleton is ranged, better chance at blocking.";
 
     private static final int ATTACK_RANGE = 15;
     private static final int BLOCK_RANGE = 10;
@@ -25,6 +25,8 @@ public class Skeleton extends Enemy {
     }
 
     public Skeleton(String enemyName, int healthPoints){ super(enemyName, healthPoints); }
+
+    public String getDescription() { return DEFAULT_SKELETON_DESCRIPTION; }
 
     // Skeleton -- fights with bow, blocks often.
     public void decideIntent() {
