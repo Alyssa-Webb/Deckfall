@@ -6,7 +6,7 @@ public class Goblin extends Enemy {
     private static final String DEFAULT_GOBLIN_NAME = "Goblin";
     private static final int DEFAULT_HEALTH = 15;
     private IntentType currentIntent;
-    // private static final String DEFAULT_GOBLIN_DESCRIPTION = "Goblin. Goblin fights with wrench. Goblin does not know how to defend itself..."
+    private static final String DEFAULT_GOBLIN_DESCRIPTION = "Goblin. Goblin fights with wrench. Goblin does not know how to defend itself...";
 
     private static final int ATTACK_RANGE = 10;
 
@@ -24,6 +24,8 @@ public class Goblin extends Enemy {
         this.currentIntent = IntentType.ATTACK;
         notifications.add(getName() + " prepares to " + currentIntent + "!");
     }
+
+    public String getDescription() { return DEFAULT_GOBLIN_DESCRIPTION; }
 
     public void executeIntent (Slayer slayer) {
         if (currentIntent == IntentType.ATTACK) {
