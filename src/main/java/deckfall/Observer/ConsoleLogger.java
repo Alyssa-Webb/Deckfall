@@ -19,10 +19,10 @@ public class ConsoleLogger implements GameEventObserver {
     private Listener userInputListener;
 
     private List<String> userMoves = List.of(
-            "get card description",
-            "play card",
-            "pass",
-            "do a lil jig"
+            "Get card description",
+            "Play card",
+            "Pass",
+            "Do a lil jig"
     );
 
     private Integer tryParsingInt(String userInput) {
@@ -33,7 +33,6 @@ public class ConsoleLogger implements GameEventObserver {
         }
     }
 
-    @Override
     public void requestUserInput(RelevantGameData gameData) {
         for(String notif : gameData.getNotifications()) {
             System.out.println(notif);
@@ -160,7 +159,6 @@ public class ConsoleLogger implements GameEventObserver {
         System.out.println(selectedCard + "\n");
     }
 
-    /* Entities don't currently have a description. neither do enemies. This is a stretch goal for if we ever add those
     private void handleGetEnemyDescription(List<Entity> enemies, Entity slayer) {
         Entity selectedTarget = null;
         while(selectedTarget == null) {
@@ -174,7 +172,7 @@ public class ConsoleLogger implements GameEventObserver {
                 System.out.println(enemies.get(userSelection).getDescription());
             }
         }
-    }*/
+    }
 
     @Override
     public void addDisplayFinishedListener(Listener listener) {
@@ -187,110 +185,133 @@ public class ConsoleLogger implements GameEventObserver {
     }
 
     @Override
-    public void defaultNotif(String message) {
-
+    public void defaultNotification(String message) {
+        GameEventBus.getGameEventBus().queueNotification(message);
     }
 
     // Floor Events
+    @Override
     public void onFloorEntry(int floor) {
-    }
-    public void onFloorClear(int floor) {
-
+        GameEventBus.getGameEventBus().queueNotification("You enter floor " + floor + " of the Tower...");
     }
 
     @Override
-    public void onBattleEntry() {
+    public void onFloorClear(int floor) {
+        GameEventBus.getGameEventBus().queueNotification("Floor " + floor + " cleared!");
+    }
 
+    // Battle Events
+
+    @Override
+    public void onBattleEntry() {
+        GameEventBus.getGameEventBus().queueNotification("A new battle begins!");
     }
 
     @Override
     public void onBattleChange(List<Entity> currentLivingPlayers, List<Entity> currentLivingFoes) {
-
+        GameEventBus.getGameEventBus().queueNotification(
+                currentLivingFoes.size() + " enemy(s) remain."
+        );
     }
 
     @Override
     public void onBattleWin() {
-
+        GameEventBus.getGameEventBus().queueNotification("You won the battle!");
     }
 
     @Override
     public void onInvalidMoveSelected(String message) {
-
+        GameEventBus.getGameEventBus().queueNotification("Invalid move: " + message);
     }
+
+    // Turn Events
 
     @Override
     public void onTurnStart(String entityName) {
-
+        GameEventBus.getGameEventBus().queueNotification("=-=- " + entityName + "'s turn -=-=");
     }
 
     @Override
     public void onTurnEnd(String entityName) {
-
+        GameEventBus.getGameEventBus().queueNotification(entityName + "'s turn ends.");
     }
 
     @Override
     public void onTurnPass(String entityName) {
-
+        GameEventBus.getGameEventBus().queueNotification(entityName + " passes their turn.");
     }
 
     // Death Events
+    @Override
     public void onSlayerDefeat() {
-        System.out.println("Slayer just died!");
+        GameEventBus.getGameEventBus().queueNotification("The Slayer has fallen...");
         displayFinishedListener.ActionPerformed(emptyEntityAction);
     }
 
+    @Override
     public void onEnemyDefeat(String enemyName) {
-        System.out.println(enemyName + " just died!");
+        GameEventBus.getGameEventBus().queueNotification(enemyName + " has been defeated!");
         displayFinishedListener.ActionPerformed(emptyEntityAction);
     }
 
     // Combat Events
     public void onEntityAttack(String attackerName, String targetName, int damageDealt) {
-
+        GameEventBus.getGameEventBus().queueNotification(
+                attackerName + " attacks " + targetName + " for " + damageDealt + " damage!"
+        );
     }
 
+    @Override
     public void onEntityDefense(String entityName, int damageBlocked) {
-
+        GameEventBus.getGameEventBus().queueNotification(
+                entityName + " gained " + damageBlocked + " block!"
+        );
     }
 
     @Override
     public void onEntityHeal(String entityName, int damageHealed) {
-
-    }
-
-    @Override
-    public void onCardDrawn(Card card) {
-
-    }
-
-    @Override
-    public void onCardPlayed(Card card) {
-
-    }
-
-    @Override
-    public void onDeckShuffled() {
-
-    }
-
-    @Override
-    public void onDecideIntent(String enemyName, IntentType intent) {
-
-    }
-
-    @Override
-    public void onEntityPass(String entityName) {
-
+        GameEventBus.getGameEventBus().queueNotification(
+                entityName + " restored " + damageHealed + " HP!"
+        );
     }
 
     @Override
     public void onEntityDamaged(String entityName, int damageReceived) {
-
+        GameEventBus.getGameEventBus().queueNotification(
+                entityName + " took " + damageReceived + " damage!"
+        );
     }
 
-    // Demon King Events
-    public void onDemonKingFloor() {
 
+    // Card and Deck Events
+    @Override
+    public void onCardDrawn(Card card) {
+        GameEventBus.getGameEventBus().queueNotification("Drew: " + card.getSimpleString());
+    }
+
+    @Override
+    public void onCardPlayed(Card card) {
+        GameEventBus.getGameEventBus().queueNotification("Played: " + card.getSimpleString());
+    }
+
+    @Override
+    public void onDeckShuffled() {
+        GameEventBus.getGameEventBus().queueNotification("Deck reshuffled from discard pile.");
+    }
+
+    // Enemy Events
+    @Override
+    public void onDecideIntent(String enemyName, IntentType intent) {
+        GameEventBus.getGameEventBus().queueNotification(
+                enemyName + " prepares to " + intent + "!"
+        );
+    }
+
+    @Override
+    public void onDemonKingFloor() {
+        GameEventBus.getGameEventBus().queueNotification(
+                "A dark presence fills the room... The Demon King awaits."
+        );
     }
 
     // Win Condition Events
@@ -303,10 +324,10 @@ public class ConsoleLogger implements GameEventObserver {
         System.out.println(
                 """
                 Tragically, you meet your end. The Tower held up to its reputation -- you wonder, briefly, whether there was anything
-                 you could've done to prevent this.\
+                you could've done to prevent this.\
                 Could you have brought more supplies? Worn different armor? Refused to go on this quest at all?\
                 But it's pointless. Your last thought as you slip into the great unknown, is the fate of the poor villagers,
-                 who's fates will never be known'.\
+                who's fates will never be known'.\
                 (sorry, no option to try again. Well, except for restarting the program of course.)
                 """);
     }
