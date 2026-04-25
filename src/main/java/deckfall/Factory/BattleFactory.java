@@ -26,7 +26,7 @@ public class BattleFactory {
         return switch (difficulty) {
             case EARLYGAME -> createEarlyBattle();
             case LATEGAME  -> createLateBattle();
-            case ENDGAME  -> createBossBattle();
+            case BOSS -> createBossBattle();
             default -> createEarlyBattle();
         };
     }

@@ -16,7 +16,7 @@ public class LevelFactory {
         return switch (levelState) {
             case EARLYGAME  -> createEarlyGameLevel();
             case LATEGAME   -> createLateGameLevel();
-            case ENDGAME    -> createEndGameLevel();
+            case BOSS -> createEndGameLevel();
             default         -> createEarlyGameLevel();
         };
     }
@@ -33,6 +33,6 @@ public class LevelFactory {
     }
 
     public static Level createEndGameLevel() {
-        return new Level(createBattles(1, Difficulty.ENDGAME));
+        return new Level(createBattles(1, Difficulty.BOSS));
     }
 }
