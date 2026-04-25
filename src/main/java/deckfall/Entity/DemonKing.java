@@ -2,6 +2,7 @@ package deckfall.Entity;
 
 import deckfall.Die.Die;
 import deckfall.Die.RandomDie;
+import deckfall.Observer.GameEventBus;
 
 import java.util.Random;
 
@@ -32,7 +33,7 @@ public class DemonKing extends Enemy {
         int roll = intentDie.roll();
         if (roll < 50) { this.currentIntent = IntentType.ATTACK;}
         else { this.currentIntent = IntentType.DEFEND; }
-        notifications.add(getName() + " prepares to " + currentIntent + "!");
+        GameEventBus.getGameEventBus().notifyDecideIntent(getName(), currentIntent);
     }
 
     public void executeIntent(Slayer slayer) {
@@ -40,17 +41,17 @@ public class DemonKing extends Enemy {
             int damage = attackDie.roll();
 
             if (damage == 0) {
-                notifications.add(getName() + " misses! The ground trembles, but you are safe.");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " misses! The ground trembles, but you are safe.");
             } else if (damage <= 10) {
-                notifications.add(getName() + " strikes with dark energy, dealing *" + damage + "* damage!");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " strikes with dark energy, dealing *" + damage + "* damage!");
             } else {
-                notifications.add(getName() + " unleashes a HELLISH SMITE, dealing *" + damage + "* damage!");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " unleashes a HELLISH SMITE, dealing *" + damage + "* damage!");
             }
             slayer.takeDamage(damage);
 
         } else if (currentIntent == IntentType.DEFEND) {
             int block = blockDie.roll() + MIN_BLOCK;
-            notifications.add(getName() + " summons a dark barrier! Blocked for *" + block + "* damage!");
+            GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " summons a dark barrier! Blocked for *" + block + "* damage!");
             this.gainBlock(block);
         }
     }

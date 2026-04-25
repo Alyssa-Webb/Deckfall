@@ -1,8 +1,7 @@
 package deckfall.Entity;
 
 import deckfall.Die.RandomDie;
-
-import java.util.Random;
+import deckfall.Observer.GameEventBus;
 
 public class Troll extends Enemy {
     private static final String DEFAULT_TROLL_NAME = "Troll";
@@ -29,25 +28,25 @@ public class Troll extends Enemy {
         int roll = intentDie.roll();
         if (roll < 80) { this.currentIntent = IntentType.ATTACK;}
         else { this.currentIntent = IntentType.DEFEND; }
-        notifications.add(getName() + " prepares to " + currentIntent + "!");
+        GameEventBus.getGameEventBus().notifyDecideIntent(getName(), currentIntent);
     }
 
     public void executeIntent (Slayer slayer) {
         if (currentIntent == IntentType.ATTACK) {
             int damage = attackDie.roll();
             if (damage == 0) {
-                notifications.add(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
             }
             else if (1 <= damage && damage <= 7) {
-                notifications.add(getName() + " throws a jab, dealing *" + damage + "* damage!");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " throws a jab, dealing *" + damage + "* damage!");
             }
             else {
-                notifications.add(getName() + " commits to a right hook, dealing *" + damage + "* damage!");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " commits to a right hook, dealing *" + damage + "* damage!");
             }
             slayer.takeDamage(damage);
         } else if (currentIntent == IntentType.DEFEND) {
             int block = blockDie.roll() + MIN_BLOCK;
-            notifications.add(getName() + " is blocking! Blocked for *" + block + "* damage!");
+            GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " is blocking! Blocked for *" + block + "* damage!");
             this.gainBlock(block);
         }
     }

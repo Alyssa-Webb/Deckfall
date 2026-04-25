@@ -1,6 +1,7 @@
 package deckfall.Entity;
 
 import deckfall.Die.RandomDie;
+import deckfall.Observer.GameEventBus;
 
 public class Goblin extends Enemy {
     private static final String DEFAULT_GOBLIN_NAME = "Goblin";
@@ -22,7 +23,7 @@ public class Goblin extends Enemy {
     // Goblin -- Only fights
     public void decideIntent () {
         this.currentIntent = IntentType.ATTACK;
-        notifications.add(getName() + " prepares to " + currentIntent + "!");
+        GameEventBus.getGameEventBus().notifyDecideIntent(getName(), currentIntent);
     }
 
     public String getDescription() { return DEFAULT_GOBLIN_DESCRIPTION; }
@@ -31,11 +32,11 @@ public class Goblin extends Enemy {
         if (currentIntent == IntentType.ATTACK) {
             int damage = attackDie.roll();
             if (damage == 0) {
-                notifications.add(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
             } else if (1 <= damage && damage <= 5) {
-                notifications.add(getName() + " pokes you with its wrench, dealing *" + damage + "* damage!");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " pokes you with its wrench, dealing *" + damage + "* damage!");
             } else {
-                notifications.add(getName() + " swings their wrench, dealing *" + damage + "* damage with the hook of the wrench!");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " swings their wrench, dealing *" + damage + "* damage with the hook of the wrench!");
             }
             slayer.takeDamage(damage);
         }

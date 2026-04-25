@@ -1,6 +1,7 @@
 package deckfall.Entity;
 
 import deckfall.Card.*;
+import deckfall.Observer.GameEventBus;
 
 public class Slayer extends Entity {
     private static final String DEFAULT_SLAYER_NAME = "Slayer";
@@ -46,7 +47,7 @@ public class Slayer extends Entity {
     public boolean isSlayer() {
         return true;
     }
-// Start and End Turn Methods
+    // Start and End Turn Methods
 
     public void startTurn() {
         this.energy = maxEnergy;
@@ -62,11 +63,11 @@ public class Slayer extends Entity {
     // Card Methods
     public boolean playCard(Card card, Entity enemy) {
         if (!hand.contains(card)) {
-            notifications.add("Card not in hand");
+            GameEventBus.getGameEventBus().notifyDefaultNotification("Card not in hand");
             return false;
         }
         if (energy < card.getEnergyCost()) {
-            notifications.add("Not enough energy to play " + card.getName());
+            GameEventBus.getGameEventBus().notifyNotEnoughEnergy(this.getName(), card);
             return false;
         }
 
