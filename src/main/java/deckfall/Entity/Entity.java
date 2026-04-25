@@ -1,6 +1,7 @@
 package deckfall.Entity;
 
 import deckfall.Card.*;
+import deckfall.Factory.CardFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,13 +19,7 @@ public abstract class Entity {
 
     protected List<String> notifications = new ArrayList<>();
 
-    protected static final List<Card> DEFAULT_CARD_DECK = List.of(
-            new SlashCard("Simple Slash", 1, "Deal 2 points of Slash damage to one enemy", 2),
-            new SlashCard("Simple Slash", 1, "Deal 2 points of Slash damage to one enemy", 2),
-            new SlashCard("Throw Down", 0, "Your final stand.", 1),
-            new RestoreHealthCard("Moon's blessing", 3, "Receive the blessing of the moon, and receive up to 5 points of health", 5),
-            new ShieldCard("Block", 1, "Block up to 3 points of incoming damage", 3)
-    );
+    protected static final List<Card> DEFAULT_CARD_DECK = CardFactory.createFixedDeck();
 
     public Entity(String name, int healthPoints) {
         this.name = name;
@@ -46,6 +41,12 @@ public abstract class Entity {
     public void gainBlock(int blockAmount) {
         this.block += blockAmount;
     }
+
+    public void gainHealth(int healAmount) {
+        this.healthPoints = healAmount;
+        if (this.healthPoints > maxHealthPoints) { this.healthPoints = maxHealthPoints; }
+    }
+
 
     public boolean isAlive() {
         return this.healthPoints > 0;
