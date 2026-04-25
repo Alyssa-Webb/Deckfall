@@ -90,8 +90,24 @@ public class Game {
 
     public RelevantGameData getRelevantGameData() {
         List<Entity> enemies = List.of(new Goblin(), new Goblin());
+        // Pass a string of notifications i.e. "pass" "use card" etc.
+        List<String> notifications = new ArrayList<>(events);
 
-        return new RelevantGameData(slayer.getHand(), enemies, slayer);
+        currentLevel = tower.getCurrentLevel();
+        currentBattle = currentLevel.getCurrentBattle();
+
+        events.clear();
+
+        return new RelevantGameData(
+                slayer.getHand(),
+                enemies,
+                slayer,
+                currentBattle,
+                currentLevel.getTotalBattles(),
+                currentLevel,
+                tower.getTotalLevels(),
+                notifications
+        );
     }
 
     public void startSlayerTurn() {
