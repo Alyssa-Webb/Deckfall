@@ -40,24 +40,19 @@ public class Game {
         return (action.getAction_enum() == MoveTypes.USE_CARD) ? currentTurnHolder.evalMove(action.getSelectedCard(), action.getTarget()) : "";
     }
 
-    public void makeMove(EntityAction action) {
+    public boolean makeMove(EntityAction action) {
         currentTurnHolder.pass();
-        /*return switch(action.getAction_enum()) {
-            case PASS -> currentTurnHolder.pass();
-            case USE_CARD -> currentTurnHolder.useCard(action.getSelectedCard(), action.getTarget());
-            case GET_CARD_INFO -> currentTurnHolder.getCardInfo(action.getSelectedCard());
-            case GET_CARD_DESCRIPTION -> currentTurnHolder.getCardDescription(action.getSelectedCard());
-            case GET_ENTITY_INFO -> action.getTarget().getEntityInfo();
-            case GET_ENTITY_DESCRIPTION -> action.getTarget().getEntityDescription();
-        };*/
+        switch(action.getAction_enum()) {
+            case PASS:
+                currentTurnHolder.pass();
+                return true;
+            case USE_CARD:
+                return ((Slayer) currentTurnHolder).playCard(action.getSelectedCard(), action.getTarget());
+        };
+        return false;
     }
 
     public GameState nextGameState(){
-        /*//this will be in charge of notifying when a battle and a floor is beaten, alongside damage and death
-        if(!events.isEmpty()) {
-            return GameState.NOTIFYING_OF_SIDE_EFFECTS;
-        }*/
-
         if(isOver()){
             if(slayerWon()){
                 return GameState.GAME_WIN;

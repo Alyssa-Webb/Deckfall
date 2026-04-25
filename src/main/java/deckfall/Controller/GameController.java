@@ -90,15 +90,18 @@ public class GameController {
         @Override
         public void ActionPerformed(EntityAction e) {
             String isMoveValid = game.evalValidityOfMove(e);
-            if(isMoveValid.isEmpty()){
-                game.endSlayerTurn();
-            } else {
+            if(!isMoveValid.isEmpty()){
                 view.onInvalidMoveSelected(isMoveValid);
             }
             /*Action action = () -> {
                 System.out.println("A");
             };*/
-            if(e.getAction_enum() == MoveTypes.PASS || e.getAction_enum() == MoveTypes.USE_CARD){
+            boolean res = game.makeMove(e);
+            if(!res){
+                view.onInvalidMoveSelected("The move failed. Please try again.");
+                view.requestUserInput(game.getRelevantGameData());
+            } else {
+                game.endSlayerTurn();
                 gameState = game.nextGameState();
                 next();
             }
