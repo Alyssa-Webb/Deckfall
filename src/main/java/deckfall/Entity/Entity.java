@@ -2,6 +2,7 @@ package deckfall.Entity;
 
 import deckfall.Card.*;
 import deckfall.Factory.CardFactory;
+import deckfall.Observer.GameEventBus;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,24 +30,25 @@ public abstract class Entity {
 
     // Entity Methods
     public void takeDamage(int damageTaken) {
-        int damageThatHitsHP = Math.max(0, damageTaken - this.block);
+        int unblockedDamage = Math.max(0, damageTaken - this.block);
 
-        notifications.add(this.name + " lost " + damageThatHitsHP + " HP!");
+        GameEventBus.getGameEventBus().notifyEntityDamaged(name, unblockedDamage);
 
         this.block = Math.max(0, this.block - damageTaken);
-        this.healthPoints = Math.max(0, this.healthPoints - damageThatHitsHP);
+        this.healthPoints = Math.max(0, this.healthPoints - unblockedDamage);
     }
 
     // Combat Methods
     public void gainBlock(int blockAmount) {
         this.block += blockAmount;
+        GameEventBus.getGameEventBus().notifyEntityDefense(name, blockAmount);
     }
 
     public void gainHealth(int healAmount) {
         this.healthPoints = healAmount;
         if (this.healthPoints > maxHealthPoints) { this.healthPoints = maxHealthPoints; }
+        GameEventBus.getGameEventBus().notifyEntityHeal(name, healAmount);
     }
-
 
     public boolean isAlive() {
         return this.healthPoints > 0;
@@ -65,9 +67,12 @@ public abstract class Entity {
             deck.addAll(discardPile);
             discardPile.clear();
             Collections.shuffle(deck);
+            GameEventBus.getGameEventBus().notifyDeckShuffled();
         }
         for (int i = 0; i < drawCount && !deck.isEmpty(); i++) {
-            hand.add(deck.removeFirst());
+            Card drawn = deck.removeFirst();
+            hand.add(drawn);
+            GameEventBus.getGameEventBus().notifyCardDrawn(drawn);
         }
     }
 
@@ -87,6 +92,7 @@ public abstract class Entity {
         notifications = new ArrayList<>();
         return retNotifications;
     }
+    abstract public String getDescription();
 
     public String evalMove(Card selectedCard, Entity target) {
         return "Cannot play cards rn. Try passing instead.";
