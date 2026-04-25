@@ -7,4 +7,8 @@ public abstract class HealCard extends Card {
         super(name, energyCost, description, CardType.HEAL);
         this.healthHealed = healthHealed;
     }
+
+    public int getHealthHealed() {
+        return healthHealed;
+    }
 }
