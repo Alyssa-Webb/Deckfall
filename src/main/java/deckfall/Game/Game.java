@@ -122,7 +122,7 @@ public class Game {
     }
 
     public void playEnemyTurn() {
-        ((Enemy) currentTurnHolder).decideIntent();
-        ((Enemy) currentTurnHolder).executeIntent(slayer);
+        currentTurnHolder.decideIntent();
+        currentTurnHolder.executeIntent(slayer);
     }
 }

@@ -18,11 +18,6 @@ public abstract class Enemy extends Entity {
         super(enemyName, healthPoints);
     }
 
-    // Enemies decide their intent before their turn (during Player's turn)
-    abstract public void decideIntent();
-
-    abstract public void executeIntent(Slayer slayer);
-
     public void changeIntentDie(Die die) {
         this.intentDie = die;
     }

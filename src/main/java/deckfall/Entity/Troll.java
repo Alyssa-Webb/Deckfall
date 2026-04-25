@@ -28,7 +28,8 @@ public class Troll extends Enemy {
         int roll = intentDie.roll();
         if (roll < 80) { this.currentIntent = IntentType.ATTACK;}
         else { this.currentIntent = IntentType.DEFEND; }
-        GameEventBus.getGameEventBus().notifyDecideIntent(getName(), currentIntent);
+        //GameEventBus.getGameEventBus().notifyDecideIntent(getName(), currentIntent);
+        GameEventBus.getGameEventBus().notifyDeckShuffled();
     }
 
     public void executeIntent (Slayer slayer) {
@@ -46,7 +47,8 @@ public class Troll extends Enemy {
             slayer.takeDamage(damage);
         } else if (currentIntent == IntentType.DEFEND) {
             int block = blockDie.roll() + MIN_BLOCK;
-            GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " is blocking! Blocked for *" + block + "* damage!");
+            //GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " is blocking! Blocked for *" + block + "* damage!");
+            GameEventBus.getGameEventBus().notifyDeckShuffled();
             this.gainBlock(block);
         }
     }

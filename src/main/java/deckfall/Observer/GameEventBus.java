@@ -11,6 +11,7 @@ public class GameEventBus {
     private final List<GameEventObserver> observers = new ArrayList<>();
     private static List<String> EVENTS = new ArrayList<>();
 
+
     private GameEventBus() {}
 
     public static GameEventBus getGameEventBus() {
@@ -35,7 +36,8 @@ public class GameEventBus {
     }
 
     public void notifyDefaultNotification(String message) {
-        for (GameEventObserver observer : observers) observer.defaultNotification(message);
+        EVENTS.add(message);
+        //for (GameEventObserver observer : observers) observer.defaultNotification(message);
     }
 
     // TODO
@@ -83,7 +85,7 @@ public class GameEventBus {
     }
 
     public void notifyEntityAttack(String attackerName, String targetName, int damageDealt) {
-        EVENTS.add("");
+        EVENTS.add(attackerName + " attacks " + targetName + " for " + damageDealt);
         //for (GameEventObserver observer : observers) observer.onEntityAttack(attackerName, targetName, damageDealt);
     }
 

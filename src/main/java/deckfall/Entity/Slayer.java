@@ -47,6 +47,16 @@ public class Slayer extends Entity {
     public boolean isSlayer() {
         return true;
     }
+
+    @Override
+    public void decideIntent() {
+
+    }
+
+    @Override
+    public void executeIntent(Slayer slayer) {
+
+    }
     // Start and End Turn Methods
 
     public void startTurn() {

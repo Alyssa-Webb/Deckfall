@@ -109,4 +109,8 @@ public abstract class Entity {
     public boolean isSlayer() {
         return false;
     }
+
+    abstract public void decideIntent();
+
+    abstract public void executeIntent(Slayer slayer);
 }
