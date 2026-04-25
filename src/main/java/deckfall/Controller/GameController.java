@@ -1,7 +1,6 @@
 package deckfall.Controller;
 
 import deckfall.DataClasses.EntityAction;
-import deckfall.DataClasses.SideEffect;
 import deckfall.Game.Game;
 import deckfall.Game.GameState;
 import deckfall.Observer.GameEventObserver;
@@ -27,18 +26,12 @@ public class GameController {
     }
 
     private void next() {
-        //do different things depending on the current state
         switch (gameState){
-            /*case NOTIFYING_OF_SIDE_EFFECTS:
-                //SideEffect sideEffect = game.getSideEffect();
-                //evalSideEffect(sideEffect);
-                break;*/
             case ENEMY_TURN:
                 game.playEnemyTurn();
                 view.update(game.getRelevantGameData());
                 break;
             case PLAYER_TURN:
-                //view.requestUserInput(game.getCurrentTurnHolder().getHand());
                 game.startSlayerTurn();
                 view.requestUserInput( game.getRelevantGameData() );
                 break;
@@ -65,19 +58,6 @@ public class GameController {
                 break;
         }
     }
-
-    private void evalSideEffect(SideEffect sideEffect) {
-        switch(sideEffect.sideEffectType){
-            case ENEMY_DEATH:
-                view.onEnemyDefeat("Enemy");
-                break;
-            case null:
-                throw new RuntimeException("Something is wrong with the way game changes states");
-            default:
-                view.defaultNotification(sideEffect.gameData);
-        }
-    }
-
 
     public class InformationDisplayFinishedListener implements Listener {
         @Override
