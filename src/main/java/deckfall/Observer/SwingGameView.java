@@ -207,7 +207,6 @@ public class SwingGameView extends JFrame implements GameEventObserver {
     // Observer Implementation
     // =============================
 
-    @Override
     public void requestUserInput(RelevantGameData gameData) {
         this.currentData = gameData;
         resetState();
@@ -265,7 +264,7 @@ public class SwingGameView extends JFrame implements GameEventObserver {
     // Unused Observer Methods
     // =============================
 
-    @Override public void defaultNotif(String message) {}
+    @Override public void defaultNotification(String message) {}
 
     @Override
     public void onFloorEntry(int floor) {
@@ -290,7 +289,6 @@ public class SwingGameView extends JFrame implements GameEventObserver {
     @Override public void onCardPlayed(Card c) {}
     @Override public void onDeckShuffled() {}
     @Override public void onDecideIntent(String e, IntentType i) {}
-    @Override public void onEntityPass(String e) {}
     @Override public void onEntityDamaged(String e, int d) {}
 
     @Override
