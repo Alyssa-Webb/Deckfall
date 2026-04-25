@@ -4,9 +4,11 @@ import java.util.LinkedList;
 
 public class Level {
     LinkedList<Battle> battles;
+    private int totalBattles;
 
     public Level(LinkedList<Battle> battles) {
         this.battles = battles;
+        this.totalBattles = battles.size();
     }
 
     public boolean levelIsCleared() {
@@ -19,6 +21,14 @@ public class Level {
 
     public int remainingBattles() {
         return battles.size();
+    }
+
+    public int getTotalBattles() {
+        return this.totalBattles;
+    }
+
+    public Battle getCurrentBattle() {
+        return battles.getFirst();
     }
 
     public Battle getNextBattle(){
