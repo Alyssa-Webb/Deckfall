@@ -31,8 +31,8 @@ public class Game {
     public void startGame() {
         currentLevel = tower.getNextLevel();
         currentBattle = currentLevel.getNextBattle();
-        currentBattle.addPlayerCharacter(slayer, 0);
-        currentTurnHolder = currentBattle.getNextTurn();
+        currentBattle.addPlayerCharacter(slayer);
+        //currentTurnHolder = currentBattle.getNextTurn();
     }
 
     // if it's valid, then it returns an empty string. Otherwise, it returns the reason why the move is invalid.
@@ -116,13 +116,13 @@ public class Game {
 
     public void startSlayerTurn() {
         slayer.startTurn();
+        currentBattle.peekNextEntity().decideIntent();
     }
     public void endSlayerTurn() {
         slayer.endTurn();
     }
 
     public void playEnemyTurn() {
-        currentTurnHolder.decideIntent();
         currentTurnHolder.executeIntent(slayer);
     }
 }

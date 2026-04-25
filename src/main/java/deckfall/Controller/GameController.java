@@ -18,7 +18,6 @@ public class GameController {
         this.view = view;
         view.addDisplayFinishedListener(new InformationDisplayFinishedListener());
         view.addUserInputListener(new UserInputReceivedListener());
-
     }
 
     public void gameStart() {

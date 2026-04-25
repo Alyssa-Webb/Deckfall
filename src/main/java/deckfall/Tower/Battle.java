@@ -76,4 +76,8 @@ public class Battle implements Iterable<Entity> {
     public void forEach(Consumer<? super Entity> action) {
         entities.forEach(action);
     }
+
+    public Entity peekNextEntity() {
+        return entities.peek();
+    }
 }
