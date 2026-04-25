@@ -1,7 +1,9 @@
-package deckfall.Tower;
+package deckfall.Factory;
+import deckfall.Tower.Battle;
+import deckfall.Tower.Difficulty;
+import deckfall.Tower.Level;
+import deckfall.Tower.Tower;
 
-import deckfall.Factory.EnemyFactory;
-import deckfall.Factory.LevelFactory;
 import java.util.LinkedList;
 
 /**
@@ -10,9 +12,9 @@ import java.util.LinkedList;
  * Medium: 2 enemies per battle.
  * Hard: 3 enemies per battle.
  **/
-public class TowerBuilder {
+public class TowerFactory {
 
-    public static Tower buildTower(Difficulty towerDifficulty) {
+    public static Tower createStandardTower (Difficulty towerDifficulty) {
         LinkedList<Level> floors = new LinkedList<>();
 
         // Levels 1-5 (Early Game)
@@ -26,7 +28,21 @@ public class TowerBuilder {
         }
 
         // Level 10 (Boss)
-        floors.add(LevelFactory.createLevel(Difficulty.ENDGAME));
+        floors.add(LevelFactory.createLevel(Difficulty.BOSS));
+
+        return new Tower(floors);
+    }
+
+    public static Tower createSmallTower (Difficulty towerDifficulty) {
+        LinkedList<Level> floors = new LinkedList<>();
+
+        // Levels 1-4 (Early Game)
+        for (int i = 0; i < 5; i++) {
+            floors.add(createLevelWithFixedDifficulty(towerDifficulty, Difficulty.EARLYGAME));
+        }
+
+        // Level 5 (Boss)
+        floors.add(LevelFactory.createLevel(Difficulty.BOSS));
 
         return new Tower(floors);
     }
