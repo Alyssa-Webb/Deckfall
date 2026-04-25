@@ -4,7 +4,7 @@ public enum Difficulty {
     // Level Difficulty
     EARLYGAME,
     LATEGAME,
-    ENDGAME,
+    BOSS,
 
     // Tower/Scaling Difficulty
     EASY,
