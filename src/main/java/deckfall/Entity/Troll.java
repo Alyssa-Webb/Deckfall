@@ -8,7 +8,7 @@ public class Troll extends Enemy {
     private static final String DEFAULT_TROLL_NAME = "Troll";
     private static final int DEFAULT_HEALTH = 25;
     private IntentType currentIntent;
-    // private static final String DEFAULT_TROLL_DESCRIPTION = "Troll. Troll fights with bare fists. Troll hits hard and sometimes blocks."
+    private static final String DEFAULT_TROLL_DESCRIPTION = "Troll. Troll fights with bare fists. Troll hits hard and sometimes blocks.";
 
     private static final int ATTACK_RANGE = 15;
     private static final int BLOCK_RANGE = 10;
@@ -21,6 +21,8 @@ public class Troll extends Enemy {
     }
 
     public Troll(String enemyName, int healthPoints){ super(enemyName, healthPoints); }
+
+    public String getDescription() { return DEFAULT_TROLL_DESCRIPTION; }
 
     // Troll -- Hits hard with fists, and rarely blocks. (80/20)
     public void decideIntent() {
