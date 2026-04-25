@@ -63,6 +63,10 @@ public class GameEventBus {
         for (GameEventObserver observer : observers) observer.onEntityDamaged(attacker, damage);
     }
 
+    public void notifyEntityAttack(String attackerName, String targetName, int damageDealt) {
+        for (GameEventObserver observer : observers) observer.onEntityAttack(attackerName, targetName, damageDealt);
+    }
+
     public void notifyEntityDefense(String entityName, int blocked) {
         for (GameEventObserver observer : observers) observer.onEntityDefense(entityName, blocked);
     }
