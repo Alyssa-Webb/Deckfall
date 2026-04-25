@@ -20,7 +20,7 @@ public abstract class Entity {
 
     protected List<String> notifications = new ArrayList<>();
 
-    protected static final List<Card> DEFAULT_CARD_DECK = CardFactory.createFixedDeck();
+    protected static final List<Card> DEFAULT_CARD_DECK = CardFactory.createFullDeck();
 
     public Entity(String name, int healthPoints) {
         this.name = name;
