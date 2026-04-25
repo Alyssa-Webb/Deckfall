@@ -24,7 +24,7 @@ public class ConsoleLogger implements GameEventObserver {
     private final List<String> userMoves = List.of(
             "Get card description",
             "Play card",
-            "Pass",
+            "End turn",
             "Do a lil jig"
     );
 
