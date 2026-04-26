@@ -33,9 +33,206 @@
 * It then provided me this class. Missing a couple methods, but IntelliJ made fixing that easy.
 
 ---
-* Prompts used to improve GUI based on ConsoleLogger (via Claude)
+* Prompts used to improve GUI based on ConsoleLogger (via Cursor and Claude)
 
+"""
+Okay, given the current project. The only file you are allowed to edit is SwingGameView.
+I want you to implement a GUI that uses the methods used in ConsoleLogger.
+Please also use the sprites in main/java/resources, using the string of each of the entities,
+i.e. "slayer.png" is the string "Slayer".
+"""
 
+* I then submitted what Cursor gave me into Claude to create a curated prompt that would give us
+* the 2D rougelike RPG we were looking for.
+"""
+Take this and make it beautiful for a 2d RPG slay-the-spire copycat:
+"""
+Which gave the following, which I plugged into Cursor:
+"""
+Redesign SwingGameView.java with a beautiful, dark-fantasy Slay the Spire-inspired
+visual style. Only edit SwingGameView.java. No other files.
+
+== AESTHETIC DIRECTION ==
+Dark fantasy dungeon crawler. Inspiration: Slay the Spire, Darkest Dungeon.
+Color palette:
+  - Background:        #0d0d14  (deep near-black)
+  - Panel background:  #13131f  (dark navy)
+  - Panel border:      #2a2a4a  (muted purple-navy)
+  - Accent gold:       #c8a84b  (warm gold for titles/borders)
+  - Accent red:        #c0392b  (enemy HP, danger)
+  - Accent green:      #27ae60  (player HP)
+  - Accent blue:       #2980b9  (energy/block)
+  - Text primary:      #e8e0d0  (warm off-white parchment)
+  - Text secondary:    #8a8070  (muted brown-grey)
+  - Card background:   #1a1a2e
+  - Card hover:        #252540
+  - Card selected:     border #c8a84b, background #1f1f35
+  - Log background:    #0a0a10
+  - Log text:          #9a9080  (dim parchment)
+
+Fonts (use Google Fonts via CSS or fallback to serif/monospaced):
+  - Titles/headers:    "Cinzel" or "Palatino Linotype" or serif
+  - Body/labels:       "Crimson Text" or "Georgia" or serif
+  - Log/monospaced:    "Courier New" monospaced
+
+== APPLYING STYLES IN SWING ==
+Use UIManager and custom painting to apply the aesthetic. Apply colors
+globally and per-component. For all JPanels, JLabels, JButtons, JTextAreas:
+
+1. Set background colors using setBackground(new Color(...))
+2. Set foreground colors using setForeground(new Color(...))
+3. Set fonts using setFont(new Font("Palatino Linotype", Font.BOLD, size))
+4. Override paintComponent where needed for custom borders and glows
+5. Set opaque(true) on panels that need solid backgrounds
+6. Set the JFrame content pane background to #0d0d14
+
+== LAYOUT STRUCTURE ==
+Keep the exact same BorderLayout structure and all existing logic.
+Only change visual styling, colors, fonts, borders, and spacing.
+
+WEST panel (action buttons 1-6):
+  - Background: #13131f
+  - Border: 2px solid #2a2a4a with title "Your Move" in gold Cinzel font
+  - Each JButton styled as:
+      background:   #1a1a2e
+      foreground:   #c8a84b  (gold text)
+      font:         Palatino Linotype Bold 13pt
+      border:       1px solid #2a2a4a, with 8px horizontal padding
+      hover effect: background #252540, border color #c8a84b
+      pressed:      background #0d0d14
+      no focus ring (setFocusPainted(false))
+      rounded corners if possible (custom UI or LineBorder with rounded=true)
+  - Buttons should fill the full width of the west panel
+
+CENTER panel (battlefield):
+  - Background: #13131f
+  - TitledBorder: "Battlefield" in gold Cinzel, border color #2a2a4a
+
+  Slayer strip (NORTH of center):
+    - Background: #13131f
+    - Stats label: warm off-white #e8e0d0, Palatino Bold 14pt
+    - HP shown as a JProgressBar:
+        foreground: #27ae60 (green), background: #0d0d14
+        no string painted on bar itself
+        height: 12px
+    - Energy shown as small blue dots or a label: blue #2980b9
+    - Block shown as a label with shield character: "🛡" in blue
+
+  Enemy panel (CENTER of center):
+    - Background: #13131f, dark scroll pane
+    - Each enemy cell:
+        background:  #16161f
+        border:      1px solid #2a2a4a, with rounded compound border
+        Name label:  #e8e0d0 Palatino Bold 14pt, centered
+        HP bar:      red #c0392b foreground, #0d0d14 background, 12px tall
+        Block label: blue "🛡 {n}"
+        Intent label:
+          ATTACK:  red text "⚔ Attacks"  background #2a0a0a
+          DEFEND:  blue text "🛡 Defends" background #0a0a2a
+          other:   grey text, background #1a1a1a
+        Clickable highlight: background #2a2a1a, border gold #c8a84b 2px
+        Cursor: HAND when clickable
+    - Add a subtle glowing red border to enemy cells (LineBorder #c0392b, 1px)
+
+  Card panel (SOUTH of center):
+    - Background: #13131f
+    - TitledBorder: "Hand" in gold
+    - Each card JButton:
+        background:   #1a1a2e
+        foreground:   #e8e0d0
+        font:         Palatino Linotype 12pt
+        border:       compound — outer LineBorder(#2a2a4a, 1), inner EmptyBorder(6,8,6,8)
+        size:         preferred width ~110px, height ~70px
+        energy cost:  shown in gold top-left of button text
+        hover:        background #252540
+        selected:     border LineBorder(#c8a84b, 2), background #1f1f35
+        disabled:     foreground #3a3a5a (very dim)
+    - Cards the player cannot afford: dimmed foreground #3a3050
+    - Tooltip: styled HTML with dark background if possible
+
+  Menu hint label:
+    - foreground: #8a8070 (muted)
+    - font: Palatino Linotype italic 12pt
+    - Border: bottom divider line color #2a2a4a
+
+EAST panel (log):
+  - Background: #0a0a10
+  - TitledBorder: "Chronicle" in gold Cinzel font, border #2a2a4a
+  - JTextArea:
+      background: #0a0a10
+      foreground: #9a9080  (dim parchment)
+      font: Courier New 11pt
+      caret color: #c8a84b
+      selection background: #2a2a4a
+  - Scrollbar: dark styling if possible (use UIManager or custom)
+  - Width: ~280px preferred
+
+== CUSTOM BORDERS ==
+Create a helper method:
+  private static TitledBorder goldTitledBorder(String title)
+
+That returns a TitledBorder with:
+  - border: LineBorder(new Color(0x2a2a4a), 1, true)
+  - title color: new Color(0xc8a84b)
+  - title font: new Font("Palatino Linotype", Font.BOLD, 13)
+
+Use goldTitledBorder() for ALL titled borders throughout the file.
+
+== BUTTON HOVER EFFECTS ==
+Create a helper method:
+  private static JButton styledButton(String label)
+
+That creates a JButton with:
+  - All colors as described above
+  - MouseListener for hover (enter → highlight background, exit → restore)
+  - setFocusPainted(false), setContentAreaFilled(false), setOpaque(true)
+  - setBorderPainted(true)
+  - Consistent padding via EmptyBorder
+
+Use styledButton() for ALL buttons: menu buttons, card buttons, confirm dialogs.
+
+== HP BARS ==
+Create a helper method:
+  private static JProgressBar hpBar(int current, int max, Color fill)
+
+That returns a JProgressBar styled with:
+  - setMinimum(0), setMaximum(max), setValue(current)
+  - setForeground(fill), setBackground(new Color(0x0d0d14))
+  - setStringPainted(false)
+  - setPreferredSize(new Dimension(100, 12))
+  - setBorder(BorderFactory.createLineBorder(new Color(0x2a2a4a), 1))
+
+Use hpBar() for both the slayer strip and each enemy cell.
+Player HP bar uses green Color(0x27ae60).
+Enemy HP bars use red Color(0xc0392b).
+
+== DIALOGS ==
+Style all JOptionPane dialogs with dark theme by setting UIManager properties
+before showing each dialog:
+  UIManager.put("OptionPane.background", new Color(0x13131f));
+  UIManager.put("Panel.background", new Color(0x13131f));
+  UIManager.put("OptionPane.messageForeground", new Color(0xe8e0d0));
+  UIManager.put("Button.background", new Color(0x1a1a2e));
+  UIManager.put("Button.foreground", new Color(0xc8a84b));
+
+== SCROLL PANES ==
+All JScrollPanes:
+  - viewport background: match parent panel
+  - setBorder(BorderFactory.createEmptyBorder()) to remove default border
+  - Use the goldTitledBorder() on the outer container instead
+
+== GENERAL RULES ==
+- Only edit SwingGameView.java. No new files. No other classes changed.
+- All existing method signatures, listener wiring, and game logic unchanged.
+- All existing observer methods preserved exactly.
+- Use only standard Java Swing — no external libraries.
+- Keep all existing UIState/MenuState logic, card flow, and target flow intact.
+- Keep the sprite loading logic exactly as-is.
+- Keep the log auto-scroll behavior.
+- Every color must use new Color(int hex) or new Color(r,g,b) — no magic strings.
+- Add setOpaque(true) wherever needed to ensure dark backgrounds render correctly.
+- Call getContentPane().setBackground(new Color(0x0d0d14)) in the constructor.
+"""
 
 * Prompts used to generate Sprites (via Google Gemini)
 """
