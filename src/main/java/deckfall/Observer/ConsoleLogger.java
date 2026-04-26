@@ -49,7 +49,7 @@ public class ConsoleLogger implements GameEventObserver {
         boolean successfullyMadeMove = false;
 
         while(!successfullyMadeMove) {
-            System.out.println("(!) It's your turn! You have " + gameData.getSlayer().getHP() + " HP and " + gameData.getSlayer().getEnergy() + " energy.");
+            System.out.println("(!) It's your turn! Your current stats: [" + gameData.getSlayer().getHP() + " HP] [" + gameData.getSlayer().getEnergy() + " energy] [" + gameData.getSlayer().getBlock() + " block].");
             System.out.println("(-) Enemies: ");
             for (Entity entity : gameData.getEnemies()) {
                 System.out.println("\t" + entity);
