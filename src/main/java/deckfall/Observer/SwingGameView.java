@@ -873,7 +873,8 @@ public class SwingGameView extends JFrame implements GameEventObserver {
 
     @Override
     public void onVictory() {
-        appendLogLine("* You win!");
+        appendLogLine("* Well. You didn't die.\n" +
+                "Against all reasonable odds, the Tower is cleared, the Demon King is defeated, and you -somehow- are still breathing. The villagers owe you a drink. Several, actually. Still, they shall sing your name for generations to come.");
         applyOptionPaneDarkTheme();
         JOptionPane.showMessageDialog(this, "* You win!", "Victory", JOptionPane.INFORMATION_MESSAGE);
     }

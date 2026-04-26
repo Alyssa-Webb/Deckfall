@@ -318,7 +318,11 @@ public class ConsoleLogger implements GameEventObserver {
     // Win Condition Events
     @Override
     public void onVictory() {
-        System.out.println("* You win!");
+        System.out.println("""
+        * Well. You didn't die.
+        * Against all reasonable odds, the Tower is cleared, the Demon King is defeated, and you — somehow — are still breathing.
+        * The villagers owe you a drink. Several, actually. Still, they shall sing your name for generations to come.
+        """);
     }
 
     @Override
