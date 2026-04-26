@@ -4,6 +4,27 @@
 Deckfall is a course project being developed by two students at the University of Colorado Boulder. It is a simplified version of the game *Slay the Spire*, with a focus on following OOAD principles, implementing design patterns, and demonstrating core Java concepts through TDD and BDD. 
 
 ---
+## How to Run Deckfall
+The game is run from the terminal using Gradle: 
+
+
+| Argument | Options |
+|---|---|
+| `<interface>` | `console`, `gui` |
+| `<difficulty>` | `easy`, `medium`, `hard` |
+| `<tower>` | `standard`, `small`, `tiny` |
+
+### Console UI
+    Usage: ./gradlew -q run --args='console <difficulty> <tower>'
+
+    e.g. ./gradlew -q run --args='console easy tiny'
+  
+### Swing GUI
+    Usage: ./gradlew -q run --args='gui <difficulty> <tower>'
+
+    e.g. ./gradlew -q run --args='gui easy tiny'
+  
+---
 
 ## Team Members
 - Adara Noble
@@ -12,7 +33,7 @@ Deckfall is a course project being developed by two students at the University o
 ## Tech Stack
 - **Language:** Java 24.0.2
 - **Build Tool:** Gradle
-- **Testing:** JUnit
+- **Testing:** JUnit 5
 
 ---
 
@@ -31,7 +52,7 @@ Deckfall is a course project being developed by two students at the University o
 
 ---
 
-## Gameplay (WIP)
+## Gameplay
 The player controls a Slayer who is navigating a tower, with the goal of defeating
 the Demon King on the tenth floor. Each floor of the tower, the Slayer encounters enemies, and the Slayer
 will draw a hand of cards, where they will need to spend their energy to play these cards against enemies. Enemies act 
