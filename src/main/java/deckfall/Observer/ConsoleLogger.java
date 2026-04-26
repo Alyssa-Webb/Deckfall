@@ -85,6 +85,7 @@ public class ConsoleLogger implements GameEventObserver {
                     System.out.println("* You did a lil jig!\n* \uD83D\uDC83 ...Nothing happened... \uD83D\uDD7A");
                     break;
                 case 6:
+                    System.out.println("* Exiting game...");
                     System.exit(0);
             }
         }
@@ -249,7 +250,7 @@ public class ConsoleLogger implements GameEventObserver {
     // Death Events
     @Override
     public void onSlayerDefeat() {
-        notifications.add("The Slayer has fallen...");
+        notifications.add("(!) The Slayer has fallen...");
         displayFinishedListener.ActionPerformed(emptyEntityAction);
     }
 

@@ -57,11 +57,15 @@ public class Game {
         }
 
         if(currentBattle.battleOver()) {
+            GameEventBus.getGameEventBus().notifyBattleWin();
             //if the tower is cleared, that should be caught by the previous Game Over check
             if(currentLevel.levelIsCleared()) {
+                GameEventBus.getGameEventBus().notifyFloorClear(tower.getCurrentLevel());
                 currentLevel = tower.getNextLevel();
+                GameEventBus.getGameEventBus().notifyFloorEntry(tower.getCurrentLevel());
             }
             currentBattle = currentLevel.getNextBattle();
+            GameEventBus.getGameEventBus().notifyBattleEntry();
             currentBattle.addPlayerCharacter(slayer);
         }
 
@@ -111,13 +115,17 @@ public class Game {
 
     public void startSlayerTurn() {
         slayer.startTurn();
+        currentBattle.peekNextEntity().decideIntent();
     }
     public void endSlayerTurn() {
         slayer.endTurn();
     }
 
     public void playEnemyTurn() {
-        currentTurnHolder.decideIntent();
         currentTurnHolder.executeIntent(slayer);
+    }
+
+    public boolean currentBattleOver() {
+        return currentBattle.battleOver();
     }
 }
