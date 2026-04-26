@@ -43,6 +43,7 @@ The game is run from the terminal using Gradle:
 ## Tech Stack
 - **Language:** Java 25
 - **Build Tool:** Gradle
+- **GUI Tool:** Java Swing
 - **Testing:** JUnit 5
 
 ---
