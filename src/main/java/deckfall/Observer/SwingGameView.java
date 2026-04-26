@@ -925,12 +925,7 @@ public class SwingGameView extends JFrame implements GameEventObserver {
             displayFinishedListener.ActionPerformed(new EntityAction());
         }
     }
-
-    @Override
-    public void defaultNotification(String message) {
-        appendLogLine(message);
-    }
-
+    
     @Override
     public void onFloorEntry(int floor) {
         appendLogLine("* You enter floor " + floor + " of the Tower...");

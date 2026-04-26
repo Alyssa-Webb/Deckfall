@@ -17,10 +17,6 @@ public class GameEventAdapter implements GameEventObserver {
     @Override
     public void addUserInputListener(Listener listener) {}
 
-    // Add string notification
-    @Override
-    public void defaultNotification(String message) {}
-
     // Floor Events
     @Override
     public void onFloorEntry(int floor) {}

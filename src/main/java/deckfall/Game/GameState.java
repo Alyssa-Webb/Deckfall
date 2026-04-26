@@ -15,6 +15,4 @@ public enum GameState {
 
     BATTLE_START,
     BATTLE_END,
-
-    NOTIFYING_OF_SIDE_EFFECTS,
 }

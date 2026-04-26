@@ -14,9 +14,6 @@ public interface GameEventObserver {
 
     void addUserInputListener(Listener listener);
 
-    // Add string notification
-    void defaultNotification(String message);
-
     // Floor Events
     void onFloorEntry(int floor);
 

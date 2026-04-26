@@ -120,6 +120,7 @@ public class Game {
         slayer.startTurn();
         currentBattle.peekNextEntity().decideIntent();
     }
+
     public void endSlayerTurn() {
         slayer.endTurn();
     }

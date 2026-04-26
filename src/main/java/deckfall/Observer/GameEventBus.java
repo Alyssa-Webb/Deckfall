@@ -135,13 +135,4 @@ public class GameEventBus {
                 """);
         //for (GameEventObserver observer : observers) observer.onDemonKingFloor();
     }
-
-    // Win/Loss Events
-    public void notifyVictory() {
-        for (GameEventObserver observer : observers) observer.onVictory();
-    }
-
-    public void notifyDefeat() {
-        for (GameEventObserver observer : observers) observer.onDefeat();
-    }
 }

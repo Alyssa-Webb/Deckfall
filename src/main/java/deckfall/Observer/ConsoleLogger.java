@@ -195,11 +195,6 @@ public class ConsoleLogger implements GameEventObserver {
         userInputListener = listener;
     }
 
-    @Override
-    public void defaultNotification(String message) {
-        notifications.add(message);
-    }
-
     // Floor Events
     @Override
     public void onFloorEntry(int floor) {
