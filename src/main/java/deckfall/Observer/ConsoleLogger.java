@@ -68,6 +68,7 @@ public class ConsoleLogger implements GameEventObserver {
             }
             switch(moveNum){
                 case 1:
+                    System.out.println("* Remember, you need enough energy to play a card!");
                     handleGetCardDescription(gameData.getCards());
                     break;
                 case 2:
