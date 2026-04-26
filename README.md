@@ -4,6 +4,16 @@
 Deckfall is a course project being developed by two students at the University of Colorado Boulder. It is a simplified version of the game *Slay the Spire*, with a focus on following OOAD principles, implementing design patterns, and demonstrating core Java concepts through TDD and BDD. 
 
 ---
+
+## Gameplay
+The player controls a Slayer who is navigating a tower, with the goal of defeating
+the Demon King on the tenth floor. Each floor of the tower, the Slayer encounters enemies, and the Slayer
+will draw a hand of cards, where they will need to spend their energy to play these cards against enemies. Enemies act 
+automatically each turn. After the enemies on the floor are defeated, the Slayer advances
+to the next floor, until they reach the Demon King. Upon defeating the Demon King, the game ends, Victory! Otherwise,
+the Slayer is defeated and must climb the tower once again...
+
+---
 ## How to Run Deckfall
 The game is run from the terminal using Gradle: 
 
@@ -31,7 +41,7 @@ The game is run from the terminal using Gradle:
 - Alyssa Webb
 
 ## Tech Stack
-- **Language:** Java 24.0.2
+- **Language:** Java 25
 - **Build Tool:** Gradle
 - **Testing:** JUnit 5
 
@@ -50,12 +60,3 @@ The game is run from the terminal using Gradle:
 
 - The fifth pattern we are planning to implement is the State pattern, which is located in the "Game" package as the enum class "GameState", and the class "GameStateManager". This will be necessary in controlling game flow, and determining what the Player can do depending on the current state of the game. For example, if the current state is "PLAYER_TURN", the player will be able to choose what Card to use, otherwise, if the current state is "ENEMY_TURN", the Player should not be able to take any action or give any input. 
 
----
-
-## Gameplay
-The player controls a Slayer who is navigating a tower, with the goal of defeating
-the Demon King on the tenth floor. Each floor of the tower, the Slayer encounters enemies, and the Slayer
-will draw a hand of cards, where they will need to spend their energy to play these cards against enemies. Enemies act 
-automatically each turn. After the enemies on the floor are defeated, the Slayer advances
-to the next floor, until they reach the Demon King. Upon defeating the Demon King, the game ends, Victory! Otherwise,
-the Slayer is defeated and must climb the tower once again...
