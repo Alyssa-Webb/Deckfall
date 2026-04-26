@@ -1,6 +1,8 @@
 package deckfall.Entity;
 
 import deckfall.Card.*;
+import deckfall.Factory.CardFactory;
+import deckfall.Observer.GameEventBus;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,13 +18,9 @@ public abstract class Entity {
     protected List<Card> hand = new ArrayList<>();
     protected List<Card> discardPile = new ArrayList<>();
 
-    protected static final List<Card> DEFAULT_CARD_DECK = List.of(
-            new SlashCard("Simple Slash", 1, "Deal 2 points of Slash damage to one enemy", 2),
-            new SlashCard("Simple Slash", 1, "Deal 2 points of Slash damage to one enemy", 2),
-            new SlashCard("Throw Down", 0, "Your final stand.", 1),
-            new RestoreHealthCard("Moon's blessing", 3, "Receive the blessing of the moon, and receive up to 5 points of health", 5),
-            new ShieldCard("Block", 1, "Block up to 3 points of incoming damage", 3)
-    );
+    protected List<String> notifications = new ArrayList<>();
+
+    protected static final List<Card> DEFAULT_CARD_DECK = CardFactory.createFullDeck();
 
     public Entity(String name, int healthPoints) {
         this.name = name;
@@ -32,14 +30,24 @@ public abstract class Entity {
 
     // Entity Methods
     public void takeDamage(int damageTaken) {
-        int damageThatHitsHP = Math.max(0, damageTaken - this.block);
+        int unblockedDamage = Math.max(0, damageTaken - this.block);
+
+        GameEventBus.getGameEventBus().notifyEntityDamaged(name, unblockedDamage);
+
         this.block = Math.max(0, this.block - damageTaken);
-        this.healthPoints = Math.max(0, this.healthPoints - damageThatHitsHP);
+        this.healthPoints = Math.max(0, this.healthPoints - unblockedDamage);
     }
 
     // Combat Methods
     public void gainBlock(int blockAmount) {
         this.block += blockAmount;
+        GameEventBus.getGameEventBus().notifyEntityDefense(name, blockAmount);
+    }
+
+    public void gainHealth(int healAmount) {
+        this.healthPoints += healAmount;
+        if (this.healthPoints > maxHealthPoints) { this.healthPoints = maxHealthPoints; }
+        GameEventBus.getGameEventBus().notifyEntityHeal(name, healAmount);
     }
 
     public boolean isAlive() {
@@ -55,13 +63,16 @@ public abstract class Entity {
     }
 
     public void drawHand(int drawCount) {
-        if (deck.size() <= drawCount) {
+        if (deck.size() < drawCount) {
             deck.addAll(discardPile);
             discardPile.clear();
             Collections.shuffle(deck);
+            GameEventBus.getGameEventBus().notifyDeckShuffled();
         }
         for (int i = 0; i < drawCount && !deck.isEmpty(); i++) {
-            hand.add(deck.removeFirst());
+            Card drawn = deck.removeFirst();
+            hand.add(drawn);
+            GameEventBus.getGameEventBus().notifyCardDrawn(drawn);
         }
     }
 
@@ -76,10 +87,14 @@ public abstract class Entity {
     public int getMaxHP()   { return maxHealthPoints; }
     public List<Card> getHand()   { return hand; }
     public int getBlock()     { return block; }
+    public List<String> getNotifications() {
+        List<String> retNotifications = notifications;
+        notifications = new ArrayList<>();
+        return retNotifications;
+    }
+    abstract public String getDescription();
 
     public String evalMove(Card selectedCard, Entity target) {
-        //TODO: eval whether the card is in the entity's hand, whether they have enough energy/mana? to use it,
-        // and whether the selected target is valid for the type of card selected. If any are false, return a string explaining that
         return "Cannot play cards rn. Try passing instead.";
     }
 
@@ -90,4 +105,12 @@ public abstract class Entity {
     public String toString() {
         return getName() + "(" + getHP() + ")";
     }
+
+    public boolean isSlayer() {
+        return false;
+    }
+
+    abstract public void decideIntent();
+
+    abstract public void executeIntent(Slayer slayer);
 }

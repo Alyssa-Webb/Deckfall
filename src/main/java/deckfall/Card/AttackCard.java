@@ -8,4 +8,8 @@ public abstract class AttackCard extends Card {
         super(name, energyCost, description, CardType.SLASH);
         this.damageDealt = damageDealt;
     }
+
+    public int getDamageDealt() {
+        return damageDealt;
+    }
 }

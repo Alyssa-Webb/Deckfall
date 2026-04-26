@@ -1,13 +1,14 @@
 package deckfall.Entity;
 
 import deckfall.Card.*;
+import deckfall.Observer.GameEventBus;
 
 public class Slayer extends Entity {
     private static final String DEFAULT_SLAYER_NAME = "Slayer";
     private static final int DEFAULT_HEALTH = 50;
     private static final int DEFAULT_DRAW_COUNT = 5;
     private static final int DEFAULT_MAX_ENERGY = 3;
-
+    private static final String DEFAULT_SLAYER_DESCRIPTION = "You are the Slayer. You have been summoned by your realm to seek understanding behind the origin of missing persons.";
     private final int maxEnergy;
     private int energy;
 
@@ -22,11 +23,36 @@ public class Slayer extends Entity {
     public Slayer(String slayerName, int healthPoints) {
         super(slayerName, healthPoints);
         this.maxEnergy = DEFAULT_MAX_ENERGY;
-        this.energy    = maxEnergy;
-        this.block     = 0;
+        this.energy = maxEnergy;
+        this.block = 0;
         addToDeck(DEFAULT_CARD_DECK);
     }
 
+    @Override
+    public String evalMove(Card selectedCard, Entity target) {
+        if(selectedCard.getEnergyCost() > energy){
+            return "You don't have enough mana. This card requires " + selectedCard.getEnergyCost() + " mana.";
+        }
+
+        return "";
+    }
+
+    public String getDescription() { return DEFAULT_SLAYER_DESCRIPTION; }
+
+    @Override
+    public boolean isSlayer() {
+        return true;
+    }
+
+    @Override
+    public void decideIntent() {
+
+    }
+
+    @Override
+    public void executeIntent(Slayer slayer) {
+
+    }
     // Start and End Turn Methods
 
     public void startTurn() {
@@ -41,14 +67,13 @@ public class Slayer extends Entity {
 
 
     // Card Methods
-    // TODO print statements?
     public boolean playCard(Card card, Entity enemy) {
         if (!hand.contains(card)) {
-            System.out.println("Card not in hand.");
+            GameEventBus.getGameEventBus().notifyDefaultNotification("Card not in hand");
             return false;
         }
         if (energy < card.getEnergyCost()) {
-            System.out.println("Not enough energy to play " + card.getName());
+            GameEventBus.getGameEventBus().notifyNotEnoughEnergy(this.getName(), card);
             return false;
         }
 

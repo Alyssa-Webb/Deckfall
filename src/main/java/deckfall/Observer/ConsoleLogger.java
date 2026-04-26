@@ -2,12 +2,14 @@ package deckfall.Observer;
 
 import deckfall.Card.Card;
 import deckfall.DataClasses.RelevantGameData;
+import deckfall.Entity.Enemy;
 import deckfall.Entity.IntentType;
 import deckfall.Controller.Listener;
 import deckfall.DataClasses.EntityAction;
 import deckfall.Entity.Entity;
 import deckfall.Game.MoveTypes;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import java.util.List;
@@ -17,12 +19,16 @@ public class ConsoleLogger implements GameEventObserver {
     private final EntityAction emptyEntityAction = new EntityAction();
     private Listener displayFinishedListener;
     private Listener userInputListener;
+    private List<String> notifications = new ArrayList<>();
 
-    private List<String> userMoves = List.of(
-            "get card description",
-            "play card",
-            "pass",
-            "do a lil jig"
+
+    private final List<String> userMoves = List.of(
+            "Get card description",
+            "Get enemy description",
+            "Play card",
+            "Pass",
+            "Do a lil jig",
+            "Exit game"
     );
 
     private Integer tryParsingInt(String userInput) {
@@ -33,28 +39,31 @@ public class ConsoleLogger implements GameEventObserver {
         }
     }
 
-    @Override
     public void requestUserInput(RelevantGameData gameData) {
-        System.out.println("Requesting user input");
+        for(String notification : gameData.getNotifications()) {
+            System.out.println(notification);
+        }
+
+        System.out.println("* Requesting user input");
 
         boolean successfullyMadeMove = false;
 
         while(!successfullyMadeMove) {
-            System.out.println("\nIt's your turn! You have " + gameData.getSlayer().getHP() + " HP and " + gameData.getSlayer().getEnergy() + " energy.");
-            System.out.println("Enemies: ");
+            System.out.println("(!) It's your turn! Your current stats: [" + gameData.getSlayer().getHP() + " HP] [" + gameData.getSlayer().getEnergy() + " energy] [" + gameData.getSlayer().getBlock() + " block].");
+            System.out.println("(-) Enemies: ");
             for (Entity entity : gameData.getEnemies()) {
                 System.out.println("\t" + entity);
             }
-            System.out.println("Moves: ");
+            System.out.println("My Moves: ");
             for (int i=0; i<userMoves.size(); i++) {
                 System.out.println("\t" + (i+1) + ": " + userMoves.get(i));
             }
-            System.out.println("Input the number of the move you'd like to make: ");
+            System.out.println("(!) What's your next move, Slayer? (1-6): ");
 
             String move = scanner.nextLine();
             Integer moveNum = tryParsingInt(move);
             if(moveNum == null || moveNum > userMoves.size() || moveNum <= 0) {
-                System.out.println("Input a number between 1 and four");
+                System.out.println("* Select a move (1-6)");
                 continue;
             }
             switch(moveNum){
@@ -62,16 +71,23 @@ public class ConsoleLogger implements GameEventObserver {
                     handleGetCardDescription(gameData.getCards());
                     break;
                 case 2:
-                    successfullyMadeMove = handlePlayCard(gameData.getCards(), gameData.getEnemies(), gameData.getSlayer());
+                    handleGetEnemyDescription(gameData.getEnemies());
                     break;
                 case 3:
-                    successfullyMadeMove = true;
-                    System.out.println("You passed your turn.");
-                    userInputListener.ActionPerformed(new EntityAction().setAction_enum(MoveTypes.PASS));
+                    System.out.println("* Remember, you need enough energy to play a card!");
+                    successfullyMadeMove = handlePlayCard(gameData.getCards(), gameData.getEnemies(), gameData.getSlayer());
                     break;
                 case 4:
-                    System.out.println("You did a lil jig!\nNothing happened.");
+                    successfullyMadeMove = true;
+                    System.out.println("* You passed your turn.");
+                    userInputListener.ActionPerformed(new EntityAction().setAction_enum(MoveTypes.PASS));
                     break;
+                case 5:
+                    System.out.println("* You did a lil jig!\n* \uD83D\uDC83 ...Nothing happened... \uD83D\uDD7A");
+                    break;
+                case 6:
+                    System.out.println("* Exiting game...");
+                    System.exit(0);
             }
         }
     }
@@ -86,7 +102,7 @@ public class ConsoleLogger implements GameEventObserver {
             System.out.println("\t" + (cards.size()+1) + ": Back to move selection");
             userSelection = tryParsingInt(scanner.nextLine());
             if (userSelection == null || userSelection <= 0) {
-                System.out.println("Please type a number, greater than 0");
+                System.out.println("* Please type a number (1-6)");
             }
         }
         return userSelection;
@@ -103,7 +119,7 @@ public class ConsoleLogger implements GameEventObserver {
             System.out.println("\t" + (enemies.size()+2) + ": Back to move selection");
             userSelection = tryParsingInt(scanner.nextLine());
             if (userSelection == null || userSelection <= 0) {
-                System.out.println("Please type a number, greater than 0");
+                System.out.println("* Please type a number (1-6)");
             }
         }
         return userSelection;
@@ -119,9 +135,6 @@ public class ConsoleLogger implements GameEventObserver {
                 return false;
             }
         }
-
-        // TODO: implement a check here for whether the card's target type is AOE.
-        // TODO: implement AOE functionality in Card
 
         Entity selectedTarget = null;
         while(selectedTarget == null) {
@@ -156,21 +169,21 @@ public class ConsoleLogger implements GameEventObserver {
         System.out.println(selectedCard + "\n");
     }
 
-    /* Entities don't currently have a description. neither do enemies. This is a stretch goal for if we ever add those
-    private void handleGetEnemyDescription(List<Entity> enemies, Entity slayer) {
+    private void handleGetEnemyDescription(List<Entity> enemies) {
         Entity selectedTarget = null;
-        while(selectedTarget == null) {
-            int userSelection = userSelectTargetNumber(enemies) -1;
-            if(userSelection <= enemies.size() +1) {
+        while (selectedTarget == null) {
+            int userSelection = userSelectTargetNumber(enemies) - 1;
+            if (userSelection >= enemies.size() + 1) {
                 return;
             } else if (userSelection == enemies.size()) {
-                System.out.println("It's you!");
-            }
-            else {
+                System.out.println("* You are the Slayer. You have been summoned by your realm to seek understanding behind the origin of missing persons.");
+                return;
+            } else {
                 System.out.println(enemies.get(userSelection).getDescription());
+                return;
             }
         }
-    }*/
+    }
 
     @Override
     public void addDisplayFinishedListener(Listener listener) {
@@ -183,124 +196,172 @@ public class ConsoleLogger implements GameEventObserver {
     }
 
     @Override
-    public void defaultNotif(String message) {
-
+    public void defaultNotification(String message) {
+        notifications.add(message);
     }
 
     // Floor Events
+    @Override
     public void onFloorEntry(int floor) {
-    }
-    public void onFloorClear(int floor) {
-
+        notifications.add("* You enter floor " + floor + " of the Tower...");
     }
 
     @Override
-    public void onBattleEntry() {
+    public void onFloorClear(int floor) {
+        notifications.add("* Floor " + floor + " cleared!");
+    }
 
+    // Battle Events
+    @Override
+    public void onBattleEntry() {
+        notifications.add("* A new battle begins!");
     }
 
     @Override
     public void onBattleChange(List<Entity> currentLivingPlayers, List<Entity> currentLivingFoes) {
-
+        notifications.add(currentLivingFoes.size() + " enemy(s) remain.");
     }
 
     @Override
     public void onBattleWin() {
-
+        notifications.add("* You won the battle!");
     }
 
     @Override
     public void onInvalidMoveSelected(String message) {
-
+        notifications.add("(!) Invalid move: " + message);
     }
 
+    // Turn Events
     @Override
     public void onTurnStart(String entityName) {
-
+        notifications.add("=-=- " + entityName + "'s turn -=-=");
     }
 
     @Override
     public void onTurnEnd(String entityName) {
-
+        notifications.add(entityName + "'s turn ends.");
     }
 
     @Override
     public void onTurnPass(String entityName) {
-
+        notifications.add(entityName + " passes their turn.");
     }
 
     // Death Events
+    @Override
     public void onSlayerDefeat() {
-        System.out.println("Slayer just died!");
+        notifications.add("(!) The Slayer has fallen...");
         displayFinishedListener.ActionPerformed(emptyEntityAction);
     }
 
+    @Override
     public void onEnemyDefeat(String enemyName) {
-        System.out.println(enemyName + " just died!");
+        notifications.add(enemyName + " has been defeated!");
         displayFinishedListener.ActionPerformed(emptyEntityAction);
     }
 
     // Combat Events
+    @Override
     public void onEntityAttack(String attackerName, String targetName, int damageDealt) {
-
+        notifications.add(attackerName + " attacks " + targetName + " for " + damageDealt + " damage!");
     }
 
+    @Override
     public void onEntityDefense(String entityName, int damageBlocked) {
-
+        notifications.add(entityName + " gained " + damageBlocked + " block!");
     }
 
     @Override
     public void onEntityHeal(String entityName, int damageHealed) {
-
-    }
-
-    @Override
-    public void onCardDrawn(Card card) {
-
-    }
-
-    @Override
-    public void onCardPlayed(Card card) {
-
-    }
-
-    @Override
-    public void onDeckShuffled() {
-
-    }
-
-    @Override
-    public void onDecideIntent(String enemyName, IntentType intent) {
-
-    }
-
-    @Override
-    public void onEntityPass(String entityName) {
-
+        notifications.add(entityName + " restored " + damageHealed + " HP!");
     }
 
     @Override
     public void onEntityDamaged(String entityName, int damageReceived) {
-
+        notifications.add(entityName + " took " + damageReceived + " damage!");
     }
 
-    // Demon King Events
-    public void onDemonKingFloor() {
+    @Override
+    public void onNotEnoughEnergy(String entityName, Card card) {
+        notifications.add(entityName + " does not have enough energy to play " + card.getName() + "!");
+    }
 
+
+    // Card and Deck Events
+    @Override
+    public void onCardDrawn(Card card) {
+        notifications.add("Drew: " + card.getSimpleString());
+    }
+
+    @Override
+    public void onCardPlayed(Card card) {
+        notifications.add("Played: " + card.getSimpleString());
+    }
+
+    @Override
+    public void onDeckShuffled() {
+        notifications.add("* Deck reshuffled from discard pile.");
+    }
+
+    // Enemy Events
+    @Override
+    public void onDecideIntent(String enemyName, IntentType intent) {
+        notifications.add(enemyName + " prepares to " + intent + "!");
+    }
+
+    @Override
+    public void onDemonKingFloor() {
+        System.out.println("* A dark presence fills the room... The Demon King awaits.");
     }
 
     // Win Condition Events
+    @Override
     public void onVictory() {
-        System.out.println("You win!");
+        System.out.println("""
+        * Well. You didn't die.
+        * Against all reasonable odds, the Tower is cleared, the Demon King is defeated, and you — somehow — are still breathing.
+        * The villagers owe you a drink. Several, actually. Still, they shall sing your name for generations to come.
+        """);
     }
 
+    @Override
     public void onDefeat() {
-
+        System.out.println("""
+                * Tragically, you meet your end. 
+                * The Tower held up to its reputation -- you wonder, briefly, whether there was anything you could've done to prevent this. 
+                * Could you have brought more supplies? 
+                * Worn different armor? 
+                * Refused to go on this quest at all?
+                * But it's pointless. 
+                * Your last thought as you slip into the great unknown, is the fate of the poor villagers,
+                * ...who's fates will never be known.
+                """);
     }
 
     @Override
     public void startGame() {
-        System.out.println("Game started.");
+        System.out.println("""
+                * You are the Slayer; a powerful and accomplished being heralded across the lands.
+                
+                * Today, you're tackling your biggest challenge yet: the Tower.
+                
+                * What's inside is completely unknown, but none who step inside are never seen again.
+                
+                * And yet, reports of missing persons in the surrounding areas have skyrocketed since its sudden appearance a few months ago.
+                
+                * At their wits end, the desperate people came to you, seeking aid.
+                
+                * You push open the large doors, and step inside...
+                
+                 -=- press <enter> to begin your climb -=-
+                """);
+        scanner.nextLine();
+        displayFinishedListener.ActionPerformed(emptyEntityAction);
+    }
+
+    @Override
+    public void update(RelevantGameData relevantGameData) {
         displayFinishedListener.ActionPerformed(emptyEntityAction);
     }
 

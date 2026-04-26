@@ -1,34 +1,33 @@
 package deckfall.Game;
 
 import deckfall.DataClasses.*;
-import deckfall.Entity.Enemy;
 import deckfall.Entity.Entity;
-import deckfall.Entity.Goblin;
 import deckfall.Entity.Slayer;
+import deckfall.Observer.GameEventBus;
 import deckfall.Tower.Battle;
 import deckfall.Tower.Level;
 import deckfall.Tower.Tower;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Game {
     private final Tower tower;
     private Level currentLevel;
     private Battle currentBattle;
-    private List<Entity> entities;
-    //storing the 'player' allows me to add them to the Battle when it starts, rather than having to *build* each Battle with the player
     private final Slayer slayer;
     private Entity currentTurnHolder;
-    private int numTurns = 0;
-    private final LinkedList<String> events = new LinkedList<>();
+    private boolean towerDefeated;
 
     public Game(Slayer playerCharacter, Tower tower) {
         this.slayer = playerCharacter;
         this.tower = tower;
-        //remove this later
-        currentTurnHolder = slayer;
+    }
+
+    //a little risky in the event there IS no next battle or level, but that's. fine.
+    public void startGame() {
+        currentLevel = tower.getNextLevel();
+        currentBattle = currentLevel.getNextBattle();
+        currentBattle.addPlayerCharacter(slayer, 0);
     }
 
     // if it's valid, then it returns an empty string. Otherwise, it returns the reason why the move is invalid.
@@ -36,24 +35,18 @@ public class Game {
         return (action.getAction_enum() == MoveTypes.USE_CARD) ? currentTurnHolder.evalMove(action.getSelectedCard(), action.getTarget()) : "";
     }
 
-    public void makeMove(EntityAction action) {
-        currentTurnHolder.pass();
-        /*return switch(action.getAction_enum()) {
-            case PASS -> currentTurnHolder.pass();
-            case USE_CARD -> currentTurnHolder.useCard(action.getSelectedCard(), action.getTarget());
-            case GET_CARD_INFO -> currentTurnHolder.getCardInfo(action.getSelectedCard());
-            case GET_CARD_DESCRIPTION -> currentTurnHolder.getCardDescription(action.getSelectedCard());
-            case GET_ENTITY_INFO -> action.getTarget().getEntityInfo();
-            case GET_ENTITY_DESCRIPTION -> action.getTarget().getEntityDescription();
-        };*/
+    public boolean makeMove(EntityAction action) {
+        switch(action.getAction_enum()) {
+            case PASS:
+                currentTurnHolder.pass();
+                return true;
+            case USE_CARD:
+                return ((Slayer) currentTurnHolder).playCard(action.getSelectedCard(), action.getTarget());
+        };
+        return false;
     }
 
     public GameState nextGameState(){
-        //this will be in charge of notifying when a battle and a floor is beaten, alongside damage and death
-        if(!events.isEmpty()) {
-            return GameState.NOTIFYING_OF_SIDE_EFFECTS;
-        }
-
         if(isOver()){
             if(slayerWon()){
                 return GameState.GAME_WIN;
@@ -62,10 +55,29 @@ public class Game {
             }
         }
 
+        if (currentBattle.battleOver()) {
+            GameEventBus.getGameEventBus().notifyBattleWin();
+            if (currentLevel.levelIsCleared()) {
+                GameEventBus.getGameEventBus().notifyFloorClear(tower.getCurrentLevel());
+                Level nextLevel = tower.getNextLevel();
+                if (nextLevel == null) {
+                    towerDefeated = true;
+                    return GameState.GAME_WIN;
+                }
+                currentLevel = nextLevel;
+                GameEventBus.getGameEventBus().notifyFloorEntry(tower.getCurrentLevel());
+            }
+            currentBattle = currentLevel.getNextBattle();
+            GameEventBus.getGameEventBus().notifyBattleEntry();
+            currentBattle.addPlayerCharacter(slayer);
+        }
 
-        events.add("Events will eventually be changed to be of type SideEffect. I think?");
-        //TODO: make non-trivial
-        return GameState.PLAYER_TURN;
+        currentTurnHolder = currentBattle.getNextTurn();
+        if(currentTurnHolder.isSlayer()) {
+            return GameState.PLAYER_TURN;
+        } else {
+            return GameState.ENEMY_TURN;
+        }
     }
 
     private boolean slayerWon() {
@@ -73,31 +85,50 @@ public class Game {
     }
 
     public boolean isOver() {
-        numTurns += 1;
-        return numTurns == 2;
-        //return player.isAlive() || tower.isCleared();
+        return !slayer.isAlive() || towerDefeated;
     }
 
-    public Entity getCurrentTurnHolder() {
-        return currentTurnHolder;
-    }
-
-    public SideEffect getSideEffect() {
-        //TODO: make this non-trivial
-        events.pop();
-        return new SideEffect(SideEffectType.ENEMY_DEATH, "Enemy");
+    public List<String> getNotifications() {
+        return GameEventBus.getGameEventBus().getEvents();
+        /*List<String> notifications = new ArrayList<>();
+        for(Entity entity : currentBattle) {
+            notifications.addAll(entity.getNotifications());
+        }
+        return notifications;*/
     }
 
     public RelevantGameData getRelevantGameData() {
-        List<Entity> enemies = List.of(new Goblin(), new Goblin());
+        //to make this more like the Observer pattern, we could switch to Events. But since we're using the Iterator pattern
+        // as well now I'm not sure it's necessary to have Observer specifically
+        List<String> notifications = getNotifications();
 
-        return new RelevantGameData(slayer.getHand(), enemies, slayer);
+        List<Entity> enemies = currentBattle.getActiveEnemies();
+
+        return new RelevantGameData(
+                slayer.getHand(),
+                enemies,
+                slayer,
+                currentBattle,
+                currentLevel.getTotalBattles(),
+                currentLevel,
+                tower.getTotalLevels(),
+                notifications
+        );
     }
 
     public void startSlayerTurn() {
         slayer.startTurn();
+        currentBattle.peekNextEntity().decideIntent();
     }
     public void endSlayerTurn() {
         slayer.endTurn();
+    }
+
+    public void playEnemyTurn() {
+        currentTurnHolder.executeIntent(slayer);
+    }
+
+    public boolean currentBattleOver() {
+        return currentBattle.battleOver();
     }
 }

@@ -21,7 +21,6 @@ public abstract class Card {
     public String getName()    { return name; }
     public int getEnergyCost() { return energyCost; }
     public String getDescription() { return description; }
-    public CardType getType() { return type; }
 
     public String getSimpleString() {
         return getName() + " (" + getEnergyCost() + ")";

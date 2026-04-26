@@ -1,42 +1,52 @@
 package deckfall.Entity;
 
-import java.util.Random;
+import deckfall.Die.RandomDie;
+import deckfall.Observer.GameEventBus;
 
 public class Troll extends Enemy {
     private static final String DEFAULT_TROLL_NAME = "Troll";
     private static final int DEFAULT_HEALTH = 25;
     private IntentType currentIntent;
-    private static final Random rand = new Random();
-    // private static final String DEFAULT_TROLL_DESCRIPTION = "Troll. Troll fights with bare fists. Troll hits hard and sometimes blocks."
+    private static final String DEFAULT_TROLL_DESCRIPTION = "Troll. Troll fights with bare fists. Troll hits hard and sometimes blocks.";
 
-    public Troll() { super(DEFAULT_TROLL_NAME, DEFAULT_HEALTH); }
+    private static final int ATTACK_RANGE = 11;
+    private static final int BLOCK_RANGE = 5;
+    private static final int MIN_BLOCK = 2;
+
+    public Troll() {
+        super(DEFAULT_TROLL_NAME, DEFAULT_HEALTH);
+        changeAttackDie(new RandomDie(ATTACK_RANGE));
+        changeBlockDie(new RandomDie(BLOCK_RANGE));
+    }
 
     public Troll(String enemyName, int healthPoints){ super(enemyName, healthPoints); }
 
+    public String getDescription() { return DEFAULT_TROLL_DESCRIPTION; }
+
     // Troll -- Hits hard with fists, and rarely blocks. (80/20)
     public void decideIntent() {
-        int roll = rand.nextInt(100);
+        int roll = intentDie.roll();
         if (roll < 80) { this.currentIntent = IntentType.ATTACK;}
         else { this.currentIntent = IntentType.DEFEND; }
-        System.out.println(getName() + " prepares to " + currentIntent + "!");
+        GameEventBus.getGameEventBus().notifyDecideIntent(getName(), this.currentIntent);
     }
 
     public void executeIntent (Slayer slayer) {
-        if (currentIntent == IntentType.ATTACK) {
-            int damage = rand.nextInt(16);
+        if (this.currentIntent == IntentType.ATTACK) {
+            int damage = attackDie.roll();
             if (damage == 0) {
-                System.out.println(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
             }
             else if (1 <= damage && damage <= 7) {
-                System.out.println(getName() + " throws a jab, dealing *" + damage + "* damage!");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " throws a jab, dealing *" + damage + "* damage!");
             }
             else {
-                System.out.println(getName() + " commits to a right hook, dealing *" + damage + "* damage!");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " commits to a right hook, dealing *" + damage + "* damage!");
             }
             slayer.takeDamage(damage);
-        } else if (currentIntent == IntentType.DEFEND) {
-            int block = rand.nextInt(5) + 5;
-            System.out.println(getName() + " is blocking! Blocked for *" + block + "* damage!");
+        } else if (this.currentIntent == IntentType.DEFEND) {
+            int block = blockDie.roll() + MIN_BLOCK;
+            GameEventBus.getGameEventBus().notifyEntityDefense(this.getName(), block);
             this.gainBlock(block);
         }
     }

@@ -18,6 +18,6 @@ public class RestoreHealthCard extends HealCard {
 
     @Override
     public void play(Entity user, Entity target) {
-        //TODO: this
+        target.gainHealth(getHealthHealed());
     }
 }

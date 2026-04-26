@@ -1,23 +1,40 @@
 package deckfall.Tower;
 
+import deckfall.Observer.GameEventBus;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class Tower {
-    LinkedList<Level> floors;
+    LinkedList<Level> levels;
+    private int totalLevels;
+    private int currentLevel = 0;
 
-    public Tower(){
-
+    public Tower() {
+        this.levels = new LinkedList<>();
     }
+
     public Tower(LinkedList<Level> floors) {
-        this.floors = floors;
+        this.levels = floors;
+        this.totalLevels = floors.size();
     }
 
     public boolean isCleared(){
-        return floors.isEmpty();
+        return levels.isEmpty();
+    }
+
+    public int getCurrentLevel() { return currentLevel; }
+
+    public int getTotalLevels() {
+        return this.totalLevels;
     }
 
     public Level getNextLevel() {
-        return floors.pop();
+        if (levels.isEmpty()) {
+            return null;
+        }
+        currentLevel += 1;
+        GameEventBus.getGameEventBus().notifyFloorEntry(currentLevel);
+        return levels.pop();
     }
 }

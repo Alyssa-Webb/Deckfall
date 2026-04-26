@@ -1,18 +1,17 @@
 package deckfall.Controller;
 
 import deckfall.DataClasses.EntityAction;
-import deckfall.DataClasses.RelevantGameData;
-import deckfall.DataClasses.SideEffect;
 import deckfall.Game.Game;
 import deckfall.Game.GameState;
 import deckfall.Game.MoveTypes;
 import deckfall.Observer.GameEventObserver;
+import deckfall.Observer.GameEventBus;
 
 public class GameController {
-    private Game game;
+    private final Game game;
     private GameState gameState = GameState.GAME_START;
-    // I'm concerned about a race condition when it comes to having multiple 'Observers' since they're also gonna need to manage input (ugh)
-    private GameEventObserver view;
+    private final GameEventObserver view;
+
 
     public GameController(Game game, GameEventObserver view) {
         this.game = game;
@@ -22,22 +21,23 @@ public class GameController {
     }
 
     public void gameStart() {
+        game.startGame();
         view.startGame();
+        GameEventBus.getGameEventBus().registerObserver(view);
     }
 
     private void next() {
-        //do different things depending on the current state
         switch (gameState){
-            case NOTIFYING_OF_SIDE_EFFECTS:
-                SideEffect sideEffect = game.getSideEffect();
-                evalSideEffect(sideEffect);
-                break;
             case ENEMY_TURN:
+                game.playEnemyTurn();
+                view.update(game.getRelevantGameData());
                 break;
             case PLAYER_TURN:
-                //view.requestUserInput(game.getCurrentTurnHolder().getHand());
                 game.startSlayerTurn();
                 view.requestUserInput( game.getRelevantGameData() );
+                break;
+            case RESUME_PLAYER_TURN:
+                view.requestUserInput(game.getRelevantGameData());
                 break;
             case BATTLE_START:
                 break;
@@ -63,19 +63,6 @@ public class GameController {
         }
     }
 
-    private void evalSideEffect(SideEffect sideEffect) {
-        switch(sideEffect.sideEffectType){
-            case ENEMY_DEATH:
-                view.onEnemyDefeat("Enemy");
-                break;
-            case null:
-                throw new RuntimeException("Something is wrong with the way game changes states");
-            default:
-                view.defaultNotif(sideEffect.gameData);
-        }
-    }
-
-
     public class InformationDisplayFinishedListener implements Listener {
         @Override
         public void ActionPerformed(EntityAction e) {
@@ -88,28 +75,31 @@ public class GameController {
         @Override
         public void ActionPerformed(EntityAction e) {
             String isMoveValid = game.evalValidityOfMove(e);
-            if(isMoveValid.isEmpty()){
-                game.endSlayerTurn();
-            } else {
+            if(!isMoveValid.isEmpty()){
                 view.onInvalidMoveSelected(isMoveValid);
-            }
-            /*Action action = () -> {
-                System.out.println("A");
-            };*/
-            if(e.getAction_enum() == MoveTypes.PASS || e.getAction_enum() == MoveTypes.USE_CARD){
-                gameState = game.nextGameState();
-                next();
-            }
-
-            // send the ActionEvent (or wtv I Really end up goin with) to game.play(ActionEvent)
-            //PlayResult playResult = game.play(ActionEvent);
-            /*if(playResult.failure) {
-                //manager.onMoveInability(playResult);
+                view.requestUserInput(game.getRelevantGameData());
             } else {
-                manager.onMovePlay(playResult);
-                evalNextState();
+                if(e.getAction_enum() == MoveTypes.PASS) {
+                    game.endSlayerTurn();
+                    gameState = game.nextGameState();
+                    next();
+                } else {
+                    boolean res = game.makeMove(e);
+                    if (!res) {
+                        //view.onInvalidMoveSelected("The move failed. Please try again.");
+                        view.requestUserInput(game.getRelevantGameData());
+                    } else {
+                        GameEventBus.getGameEventBus().clearEvents();
+                        if(!game.currentBattleOver()) {
+                            gameState = GameState.RESUME_PLAYER_TURN;
+                        } else {
+                            game.endSlayerTurn();
+                            gameState = game.nextGameState();
+                        }
+                        next();
+                    }
+                }
             }
-             */
         }
     }
 }

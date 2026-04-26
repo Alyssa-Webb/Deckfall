@@ -3,6 +3,7 @@ package deckfall.Game;
 public enum GameState {
     ENEMY_TURN,
     PLAYER_TURN,
+    RESUME_PLAYER_TURN,
 
     GAME_START,
     GAME_OVER,

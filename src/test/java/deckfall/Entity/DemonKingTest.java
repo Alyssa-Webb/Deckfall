@@ -9,6 +9,6 @@ public class DemonKingTest {
     void testDefaultConstructor() {
         DemonKing defaultDemonKing = new DemonKing();
         assertEquals("Demon King", defaultDemonKing.getName());
-        assertEquals(100, defaultDemonKing.getHP());
+        assertEquals(50, defaultDemonKing.getHP());
     }
 }

@@ -1,42 +1,54 @@
 package deckfall.Entity;
 
-import java.util.Random;
+import deckfall.Die.RandomDie;
+import deckfall.Observer.GameEventBus;
 
 public class DemonKing extends Enemy {
     private static final String DEFAULT_DEMON_KING_NAME = "Demon King";
-    private static final int DEFAULT_HEALTH = 100;
+    private static final int DEFAULT_HEALTH = 50;
     private IntentType currentIntent;
-    private static final Random rand = new Random();
-    // private static final String DEFAULT_SKELETON_DESCRIPTION = "Skeleton. Skeleton fights from a far, using a Bow and Shield. Since Skeleton is ranged, better chance at blocking."
+    private static final String DEFAULT_DEMON_KING_DESCRIPTION = "Demon King. Ruler of this very Tower, preparing his horde of minions to be unleashed unto the realm to do his very bidding. Beware the dark energy he uses, some say they can hear the screams from the souls trapped within.";
 
-    public DemonKing() { super(DEFAULT_DEMON_KING_NAME, DEFAULT_HEALTH); }
+    //private static final int INTENT_RANGE = 100;
+    private static final int ATTACK_RANGE = 12;
+    private static final int BLOCK_RANGE = 8;
+    public static final int MIN_BLOCK = 3;
+
+    public DemonKing() {
+        super(DEFAULT_DEMON_KING_NAME, DEFAULT_HEALTH);
+        changeAttackDie(new RandomDie(ATTACK_RANGE));
+        changeBlockDie(new RandomDie(BLOCK_RANGE));
+    }
+
 
     public DemonKing(String enemyName, int healthPoints){ super(enemyName, healthPoints); }
 
+    public String getDescription() { return DEFAULT_DEMON_KING_DESCRIPTION; }
+
     // Skeleton -- fights with bow, blocks often.
     public void decideIntent() {
-        int roll = rand.nextInt(100);
+        int roll = intentDie.roll();
         if (roll < 50) { this.currentIntent = IntentType.ATTACK;}
         else { this.currentIntent = IntentType.DEFEND; }
-        System.out.println(getName() + " prepares to " + currentIntent + "!");
+        GameEventBus.getGameEventBus().notifyDecideIntent(getName(), currentIntent);
     }
 
     public void executeIntent(Slayer slayer) {
-        if (currentIntent == IntentType.ATTACK) {
-            int damage = rand.nextInt(16);
+        if (this.currentIntent == IntentType.ATTACK) {
+            int damage = attackDie.roll();
 
             if (damage == 0) {
-                System.out.println(getName() + " misses! The ground trembles, but you are safe.");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " misses! The ground trembles, but you are safe.");
             } else if (damage <= 10) {
-                System.out.println(getName() + " strikes with dark energy, dealing *" + damage + "* damage!");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " strikes with dark energy, dealing *" + damage + "* damage!");
             } else {
-                System.out.println(getName() + " unleashes a HELLISH SMITE, dealing *" + damage + "* damage!");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " unleashes a HELLISH SMITE, dealing *" + damage + "* damage!");
             }
             slayer.takeDamage(damage);
 
-        } else if (currentIntent == IntentType.DEFEND) {
-            int block = rand.nextInt(11) + 10;
-            System.out.println(getName() + " summons a dark barrier! Blocked for *" + block + "* damage!");
+        } else if (this.currentIntent == IntentType.DEFEND) {
+            int block = blockDie.roll() + MIN_BLOCK;
+            GameEventBus.getGameEventBus().notifyEntityDefense(this.getName(), block);
             this.gainBlock(block);
         }
     }
