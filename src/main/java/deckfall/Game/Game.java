@@ -23,14 +23,12 @@ public class Game {
         this.tower = tower;
     }
 
-    //a little risky in the event there IS no next battle or level, but that's. fine.
     public void startGame() {
         currentLevel = tower.getNextLevel();
         currentBattle = currentLevel.getNextBattle();
         currentBattle.addPlayerCharacter(slayer, 0);
     }
 
-    // if it's valid, then it returns an empty string. Otherwise, it returns the reason why the move is invalid.
     public String evalValidityOfMove(EntityAction action) {
         return (action.getAction_enum() == MoveTypes.USE_CARD) ? currentTurnHolder.evalMove(action.getSelectedCard(), action.getTarget()) : "";
     }
@@ -90,16 +88,9 @@ public class Game {
 
     public List<String> getNotifications() {
         return GameEventBus.getGameEventBus().getEvents();
-        /*List<String> notifications = new ArrayList<>();
-        for(Entity entity : currentBattle) {
-            notifications.addAll(entity.getNotifications());
-        }
-        return notifications;*/
     }
 
     public RelevantGameData getRelevantGameData() {
-        //to make this more like the Observer pattern, we could switch to Events. But since we're using the Iterator pattern
-        // as well now I'm not sure it's necessary to have Observer specifically
         List<String> notifications = getNotifications();
 
         List<Entity> enemies = currentBattle.getActiveEnemies();

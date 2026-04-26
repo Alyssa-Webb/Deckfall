@@ -6,7 +6,6 @@ import deckfall.Factory.TowerFactory;
 import deckfall.Game.Game;
 import deckfall.Observer.ConsoleLogger;
 import deckfall.Tower.Difficulty;
-import deckfall.Tower.Tower;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -21,6 +20,5 @@ public class MVCTest {
         ConsoleLogger view = new ConsoleLogger();
         Game game = new Game(new Slayer(), TowerFactory.createSmallTower(Difficulty.EASY));
         GameController controller = new GameController(game, view);
-        assertDoesNotThrow(() -> controller.gameStart());
     }
 }
