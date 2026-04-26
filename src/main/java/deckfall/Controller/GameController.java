@@ -86,7 +86,6 @@ public class GameController {
                 } else {
                     boolean res = game.makeMove(e);
                     if (!res) {
-                        GameEventBus.getGameEventBus().notifyNotEnoughEnergy("The Slayer", e.getSelectedCard());
                         //view.onInvalidMoveSelected("The move failed. Please try again.");
                         view.requestUserInput(game.getRelevantGameData());
                     } else {
@@ -101,16 +100,6 @@ public class GameController {
                     }
                 }
             }
-
-            // send the ActionEvent (or wtv I Really end up goin with) to game.play(ActionEvent)
-            //PlayResult playResult = game.play(ActionEvent);
-            /*if(playResult.failure) {
-                //manager.onMoveInability(playResult);
-            } else {
-                manager.onMovePlay(playResult);
-                evalNextState();
-            }
-             */
         }
     }
 }
