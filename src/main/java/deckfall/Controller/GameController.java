@@ -77,8 +77,8 @@ public class GameController {
             String isMoveValid = game.evalValidityOfMove(e);
             if(!isMoveValid.isEmpty()){
                 view.onInvalidMoveSelected(isMoveValid);
+                view.requestUserInput(game.getRelevantGameData());
             } else {
-                GameEventBus.getGameEventBus().clearEvents();
                 if(e.getAction_enum() == MoveTypes.PASS) {
                     game.endSlayerTurn();
                     gameState = game.nextGameState();
@@ -90,6 +90,7 @@ public class GameController {
                         //view.onInvalidMoveSelected("The move failed. Please try again.");
                         view.requestUserInput(game.getRelevantGameData());
                     } else {
+                        GameEventBus.getGameEventBus().clearEvents();
                         if(!game.currentBattleOver()) {
                             gameState = GameState.RESUME_PLAYER_TURN;
                         } else {
