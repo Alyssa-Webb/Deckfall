@@ -5,16 +5,11 @@ import deckfall.Entity.Entity;
 import deckfall.Game.MoveTypes;
 
 public class EntityAction {
-    private static final String DEFAULT_ACTION = "pass";
     private static final MoveTypes DEFAULT_ACTION_ENUM = MoveTypes.PASS;
 
-    //this covers like EVERY base I could think of. What we actually use in practice will differ from what's available.
     private Entity target;
-    private String targetID;
-    private String action = DEFAULT_ACTION;
     private MoveTypes action_enum = DEFAULT_ACTION_ENUM;
     private Card selectedCard;
-    private String cardID;
 
     public EntityAction setTarget(Entity target){
         this.target = target;
@@ -22,22 +17,6 @@ public class EntityAction {
     }
     public Entity getTarget() {
         return target;
-    }
-
-    public EntityAction setTargetID(String targetID) {
-        this.targetID = targetID;
-        return this;
-    }
-    public String getTargetID() {
-        return targetID;
-    }
-
-    public EntityAction setAction(String action){
-        this.action = action;
-        return this;
-    }
-    public String getAction() {
-        return action;
     }
 
     public EntityAction setSelectedCard(Card selectedCard){
@@ -54,13 +33,5 @@ public class EntityAction {
     }
     public MoveTypes getAction_enum() {
         return action_enum;
-    }
-
-    public EntityAction setCardID(String cardID) {
-        this.cardID = cardID;
-        return this;
-    }
-    public String getCardID() {
-        return cardID;
     }
 }
