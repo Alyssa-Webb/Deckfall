@@ -45,7 +45,7 @@ public abstract class Entity {
     }
 
     public void gainHealth(int healAmount) {
-        this.healthPoints = healAmount;
+        this.healthPoints += healAmount;
         if (this.healthPoints > maxHealthPoints) { this.healthPoints = maxHealthPoints; }
         GameEventBus.getGameEventBus().notifyEntityHeal(name, healAmount);
     }
@@ -63,7 +63,7 @@ public abstract class Entity {
     }
 
     public void drawHand(int drawCount) {
-        if (deck.size() <= drawCount) {
+        if (deck.size() < drawCount) {
             deck.addAll(discardPile);
             discardPile.clear();
             Collections.shuffle(deck);
