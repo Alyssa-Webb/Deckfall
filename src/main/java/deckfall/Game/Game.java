@@ -1,7 +1,6 @@
 package deckfall.Game;
 
 import deckfall.DataClasses.*;
-import deckfall.Entity.Enemy;
 import deckfall.Entity.Entity;
 import deckfall.Entity.Slayer;
 import deckfall.Observer.GameEventBus;
@@ -9,7 +8,6 @@ import deckfall.Tower.Battle;
 import deckfall.Tower.Level;
 import deckfall.Tower.Tower;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
