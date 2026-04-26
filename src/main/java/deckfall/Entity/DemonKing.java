@@ -10,9 +10,9 @@ public class DemonKing extends Enemy {
     private static final String DEFAULT_DEMON_KING_DESCRIPTION = "Demon King. Ruler of this very Tower, preparing his horde of minions to be unleashed unto the realm to do his very bidding. Beware the dark energy he uses, some say they can hear the screams from the souls trapped within.";
 
     //private static final int INTENT_RANGE = 100;
-    private static final int ATTACK_RANGE = 15;
-    private static final int BLOCK_RANGE = 10;
-    public static final int MIN_BLOCK = 8;
+    private static final int ATTACK_RANGE = 12;
+    private static final int BLOCK_RANGE = 8;
+    public static final int MIN_BLOCK = 3;
 
     public DemonKing() {
         super(DEFAULT_DEMON_KING_NAME, DEFAULT_HEALTH);

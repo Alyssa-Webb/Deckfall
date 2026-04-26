@@ -15,9 +15,9 @@ public class Skeleton extends Enemy {
     private IntentType currentIntent;
     private static final String DEFAULT_SKELETON_DESCRIPTION = "Skeleton. Skeleton fights from a far, using a Bow and Shield. Since Skeleton is ranged, better chance at blocking.";
 
-    private static final int ATTACK_RANGE = 15;
-    private static final int BLOCK_RANGE = 10;
-    private static final int MIN_BLOCK = 5;
+    private static final int ATTACK_RANGE = 10;
+    private static final int BLOCK_RANGE = 5;
+    private static final int MIN_BLOCK = 2;
 
     public Skeleton() {
         super(DEFAULT_SKELETON_NAME, DEFAULT_HEALTH);

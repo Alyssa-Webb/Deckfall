@@ -9,9 +9,9 @@ public class Troll extends Enemy {
     private IntentType currentIntent;
     private static final String DEFAULT_TROLL_DESCRIPTION = "Troll. Troll fights with bare fists. Troll hits hard and sometimes blocks.";
 
-    private static final int ATTACK_RANGE = 15;
-    private static final int BLOCK_RANGE = 10;
-    private static final int MIN_BLOCK = 5;
+    private static final int ATTACK_RANGE = 11;
+    private static final int BLOCK_RANGE = 5;
+    private static final int MIN_BLOCK = 2;
 
     public Troll() {
         super(DEFAULT_TROLL_NAME, DEFAULT_HEALTH);

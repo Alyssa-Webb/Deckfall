@@ -9,7 +9,7 @@ public class Goblin extends Enemy {
     private IntentType currentIntent;
     private static final String DEFAULT_GOBLIN_DESCRIPTION = "Goblin. Goblin fights with wrench. Goblin does not know how to defend itself...";
 
-    private static final int ATTACK_RANGE = 10;
+    private static final int ATTACK_RANGE = 8;
 
     public Goblin() {
         super(DEFAULT_GOBLIN_NAME, DEFAULT_HEALTH);
