@@ -23,22 +23,10 @@ public class Battle {
                 .noneMatch(Entity::isAlive);
     }
 
-    public boolean isPlayerDead() {
-        return entities.stream()
-                .filter(entity -> entity instanceof Slayer)
-                .noneMatch(Entity::isAlive);
-    }
-
     // Returns only living non-player entities
     public List<Entity> getActiveEnemies() {
         return entities.stream()
                 .filter(entity -> !(entity instanceof Slayer) && entity.isAlive())
-                .toList();
-    }
-
-    public List<Entity> getActivePlayers() {
-        return entities.stream()
-                .filter(entity -> entity instanceof Slayer && entity.isAlive())
                 .toList();
     }
 
