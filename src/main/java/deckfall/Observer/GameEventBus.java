@@ -60,7 +60,7 @@ public class GameEventBus {
     }
 
     public void notifyBattleWin() {
-        EVENTS.add("You won!");
+        EVENTS.add("* You won this battle!");
         //for (GameEventObserver observer : observers) observer.onBattleWin();
     }
 
