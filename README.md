@@ -1,7 +1,7 @@
 
 # Deckfall
 
-Deckfall is a course project being developed by two students at the University of Colorado Boulder. It is a simplified version of the game *Slay the Spire*, with a focus on following OOAD principles, implementing design patterns, and demonstrating core Java concepts through TDD and BDD. 
+Deckfall is a course project being developed by two students at the University of Colorado Boulder. It is a simplified version of the game *Slay the Spire*, with a focus on following Object Oriented Design and Analysis (i.e. SOLID) principles, implementing design patterns, and demonstrating core Java concepts through test-driven-development. 
 
 ---
 
