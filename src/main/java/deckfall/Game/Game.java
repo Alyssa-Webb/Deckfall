@@ -124,4 +124,8 @@ public class Game {
     public void playEnemyTurn() {
         currentTurnHolder.executeIntent(slayer);
     }
+
+    public boolean currentBattleOver() {
+        return currentBattle.battleOver();
+    }
 }

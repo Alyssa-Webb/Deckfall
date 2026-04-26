@@ -221,7 +221,7 @@ public class ConsoleLogger implements GameEventObserver {
 
     @Override
     public void onInvalidMoveSelected(String message) {
-        notifications.add("Invalid move: " + message);
+        System.out.println("Invalid move: " + message);
     }
 
     // Turn Events

@@ -36,6 +36,9 @@ public class GameController {
                 game.startSlayerTurn();
                 view.requestUserInput( game.getRelevantGameData() );
                 break;
+            case RESUME_PLAYER_TURN:
+                view.requestUserInput(game.getRelevantGameData());
+                break;
             case BATTLE_START:
                 break;
             case BATTLE_END:
@@ -82,9 +85,16 @@ public class GameController {
                 } else {
                     boolean res = game.makeMove(e);
                     if (!res) {
-                        view.onInvalidMoveSelected("The move failed. Please try again.");
+                        GameEventBus.getGameEventBus().notifyNotEnoughEnergy("The Slayer", e.getSelectedCard());
+                        //view.onInvalidMoveSelected("The move failed. Please try again.");
                         view.requestUserInput(game.getRelevantGameData());
                     } else {
+                        if(!game.currentBattleOver()) {
+                            gameState = GameState.RESUME_PLAYER_TURN;
+                        } else {
+                            game.endSlayerTurn();
+                            gameState = game.nextGameState();
+                        }
                         next();
                     }
                 }
