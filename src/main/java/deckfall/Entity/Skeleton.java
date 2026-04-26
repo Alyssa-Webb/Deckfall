@@ -44,10 +44,10 @@ public class Skeleton extends Enemy {
                 GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " misses! Dealt *" + damage + "* damage... ouch.");
             }
             else if (1 <= damage && damage <= 5) {
-                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " throws a jab, dealing *" + damage + "* damage!");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " clips you with a glancing shot, dealing*" + damage + "* damage!");
             }
             else {
-                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " commits to a right hook, dealing *" + damage + "* damage!");
+                GameEventBus.getGameEventBus().notifyDefaultNotification(getName() + " plants its feet and fires true, dealing *" + damage + "* damage!");
             }
             slayer.takeDamage(damage);
         } else if (this.currentIntent == IntentType.DEFEND) {
