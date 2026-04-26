@@ -1,5 +1,7 @@
 package deckfall.Tower;
 
+import deckfall.Observer.GameEventBus;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,6 +34,7 @@ public class Tower {
             return null;
         }
         currentLevel += 1;
+        GameEventBus.getGameEventBus().notifyFloorEntry(currentLevel);
         return levels.pop();
     }
 }
