@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 import deckfall.Entity.Slayer;
 
-public class Battle implements Iterable<Entity> {
+public class Battle {
     private final LinkedList<Entity> entities;
 
     public Battle(LinkedList<Entity> foes) {
@@ -65,16 +65,6 @@ public class Battle implements Iterable<Entity> {
             }
         }
         return null;
-    }
-
-    @Override
-    public Iterator<Entity> iterator() {
-        return entities.iterator();
-    }
-
-    @Override
-    public void forEach(Consumer<? super Entity> action) {
-        entities.forEach(action);
     }
 
     public Entity peekNextEntity() {
