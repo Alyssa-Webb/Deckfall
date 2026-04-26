@@ -18,6 +18,7 @@ public class Game {
     private Battle currentBattle;
     private final Slayer slayer;
     private Entity currentTurnHolder;
+    private boolean towerDefeated;
 
     public Game(Slayer playerCharacter, Tower tower) {
         this.slayer = playerCharacter;
@@ -56,12 +57,16 @@ public class Game {
             }
         }
 
-        if(currentBattle.battleOver()) {
+        if (currentBattle.battleOver()) {
             GameEventBus.getGameEventBus().notifyBattleWin();
-            //if the tower is cleared, that should be caught by the previous Game Over check
-            if(currentLevel.levelIsCleared()) {
+            if (currentLevel.levelIsCleared()) {
                 GameEventBus.getGameEventBus().notifyFloorClear(tower.getCurrentLevel());
-                currentLevel = tower.getNextLevel();
+                Level nextLevel = tower.getNextLevel();
+                if (nextLevel == null) {
+                    towerDefeated = true;
+                    return GameState.GAME_WIN;
+                }
+                currentLevel = nextLevel;
                 GameEventBus.getGameEventBus().notifyFloorEntry(tower.getCurrentLevel());
             }
             currentBattle = currentLevel.getNextBattle();
@@ -82,7 +87,7 @@ public class Game {
     }
 
     public boolean isOver() {
-        return !slayer.isAlive() || tower.isCleared();
+        return !slayer.isAlive() || towerDefeated;
     }
 
     public List<String> getNotifications() {
