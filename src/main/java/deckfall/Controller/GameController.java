@@ -82,6 +82,7 @@ public class GameController {
                 if(e.getAction_enum() == MoveTypes.PASS) {
                     game.endSlayerTurn();
                     gameState = game.nextGameState();
+                    next();
                 } else {
                     boolean res = game.makeMove(e);
                     if (!res) {
